@@ -2,13 +2,11 @@ public class Arrow {
  
   //-------------------instance variables---------------------// 
 
-  private float xPos;    
-  private float yPos = height-60;
-  private float speed = 100;
-  private int arrowLength = 60;
   private int arrowWidth = 3;
-  
-  // drawPower
+  private int arrowLength = 60;
+  private float xPos;    
+  private float yPos = height-arrowLength;
+  private float speed = 100;
 
   //----------------------constructors------------------------//
 
@@ -19,7 +17,18 @@ public class Arrow {
   //-------------------------methods--------------------------//
   
   public void display() {
-    rect((bow.getXPos() + (bow.getWidth()/2)), yPos, arrowWidth, arrowLength);
+    if (yPos < height-arrowLength) {               // arrow in flight
+      rect(xPos, yPos, arrowWidth, arrowLength);
+      triangle(xPos + arrowWidth/2, yPos - 10,     // top point
+         xPos - arrowWidth/2, yPos,                // bottom left point
+         xPos + arrowWidth + arrowWidth/2, yPos);  // bottom right point
+    }
+    else {                                                                       // arrow nocked
+    rect(bow.getXPos() + (bow.getWidth()/2), yPos, arrowWidth, arrowLength);
+    triangle(bow.getXPos() + (bow.getWidth()/2) + arrowWidth/2, yPos - 10,       // top point
+         bow.getXPos() + (bow.getWidth()/2) - arrowWidth/2, yPos,                // bottom left point
+         bow.getXPos() + (bow.getWidth()/2) + arrowWidth + arrowWidth/2, yPos);  // bottom right point
+    }
   }
 
   public void looseArrow() {
@@ -27,6 +36,7 @@ public class Arrow {
       yPos -= speed;
     }
   }
+
 
   // arrowSpeed(float drawPower)
   // arrowTrajectory()
@@ -49,6 +59,9 @@ public class Arrow {
     return arrowLength; 
   }
   
+    public int getArrowWidth() {
+    return arrowWidth; 
+  }
  
   //-------------------------setters--------------------------//
   

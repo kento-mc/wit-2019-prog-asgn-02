@@ -1,4 +1,4 @@
-// RobinHoodTrainer v0.2
+// RobinHoodTrainer v0.3
 
 import javax.swing.JOptionPane;
 
@@ -13,7 +13,7 @@ int attempts = 0;
 int maxAttempts = 0;
 int maxNumberOfGames = 5;
 int numberOfGamesPlayer = 0;
-
+float[] savedX;
 
 void setup() {
   size(600,800);
@@ -23,6 +23,7 @@ void setup() {
   target = new Target();
   arrow = new Arrow();
   power = new PowerMeter();
+  savedX = new float[2];
   //player = new Player(JOptionPane.showInputDialog("Welcome young challenger. What is your name?"));
 }
 
@@ -38,16 +39,23 @@ void draw() {
   bow.display();
   arrow.display();
   power.display();
+  
   boolean loosed = arrowLoosed();
   if (loosed == true) {
     arrow.looseArrow();
+  }
+  
+  boolean hit = targetHit();
+  if (hit == true) {
+    arrow.setYPos(target.getYPos());
   }
     
   
   println("Target x position: " + target.getXPos() + "\n" 
                                 + "Target y position: " 
                                 + target.getYPos() + "\n"
-                                + "mouseX position: " + mouseX);
+                                + "mouseX position: " + mouseX
+                                + "\n" + savedX[0]);
   
 }  // close draw() method
 
@@ -55,6 +63,8 @@ void draw() {
 //-------------------------methods--------------------------//
 
 void mouseClicked() {
+  savedX[0] = mouseX;
+  arrow.setXPos(savedX[0]);
   arrow.looseArrow();
 
 }
@@ -65,6 +75,15 @@ boolean arrowLoosed() {
   }
   else {
     return false;
+  }
+}
+
+boolean targetHit() {
+  if (arrow.getYPos() > target.getYPos()) {
+    return false;
+  }
+  else {
+    return true;
   }
 }
   
