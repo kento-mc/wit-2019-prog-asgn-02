@@ -2,21 +2,30 @@ public class Arrow {
  
   //-------------------instance variables---------------------// 
 
-  private float xPos = mouseX;    // initializes Arrow x position to mouseX
+  private float xPos;    
   private float yPos = height-60;
+  private float speed = 100;
+  private int arrowLength = 60;
+  private int arrowWidth = 3;
   
   // drawPower
 
   //----------------------constructors------------------------//
 
-  public Arrow(float xPos) {
-    this.xPos = xPos;
+   public Arrow() {
+     
   }
 
   //-------------------------methods--------------------------//
   
   public void display() {
-    rect(xPos, yPos, 20, 60);
+    rect((bow.getXPos() + (bow.getWidth()/2)), yPos, arrowWidth, arrowLength);
+  }
+
+  public void looseArrow() {
+    if (yPos > target.getYPos()) {
+      yPos -= speed;
+    }
   }
 
   // arrowSpeed(float drawPower)
@@ -32,7 +41,15 @@ public class Arrow {
     return yPos;
   }
   
+  public float getSpeed() {
+    return speed;
+  }
   
+  public int getArrowLength() {
+    return arrowLength; 
+  }
+  
+ 
   //-------------------------setters--------------------------//
   
   public void setXPos(float xPos) {
