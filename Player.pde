@@ -2,13 +2,13 @@ public class Player {
  
   //-------------------instance variables---------------------// 
 
-  // playerName
+  private String playerName;
   // playerScores
 
   //----------------------constructors------------------------//
 
-  public Player(){
-
+  public Player(String playerNmae){
+    this.playerName = playerName;
   }
 
   //-------------------------methods--------------------------//
