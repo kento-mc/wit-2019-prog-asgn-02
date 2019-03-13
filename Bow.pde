@@ -31,7 +31,7 @@ public class Bow {
     return yPos;
   }
   
- public int getWidth() {
+ public int getBowWidth() {
     return bowWidth;
  }
 

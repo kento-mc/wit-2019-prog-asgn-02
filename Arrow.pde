@@ -18,16 +18,16 @@ public class Arrow {
   
   public void display() {
     if (yPos < height-arrowLength) {               // arrow in flight
-      rect(xPos, yPos, arrowWidth, arrowLength);
+      rect(xPos, yPos, arrowWidth, arrowLength);   // shaft
       triangle(xPos + arrowWidth/2, yPos - 10,     // top point
          xPos - arrowWidth/2, yPos,                // bottom left point
          xPos + arrowWidth + arrowWidth/2, yPos);  // bottom right point
     }
-    else {                                                                       // arrow nocked
-    rect(bow.getXPos() + (bow.getWidth()/2), yPos, arrowWidth, arrowLength);
-    triangle(bow.getXPos() + (bow.getWidth()/2) + arrowWidth/2, yPos - 10,       // top point
-         bow.getXPos() + (bow.getWidth()/2) - arrowWidth/2, yPos,                // bottom left point
-         bow.getXPos() + (bow.getWidth()/2) + arrowWidth + arrowWidth/2, yPos);  // bottom right point
+    else {                                                                          // arrow nocked
+    rect(bow.getXPos() + (bow.getBowWidth()/2), yPos, arrowWidth, arrowLength);     // shaft
+    triangle(bow.getXPos() + (bow.getBowWidth()/2) + arrowWidth/2, yPos - 10,       // top point
+         bow.getXPos() + (bow.getBowWidth()/2) - arrowWidth/2, yPos,                // bottom left point
+         bow.getXPos() + (bow.getBowWidth()/2) + arrowWidth + arrowWidth/2, yPos);  // bottom right point
     }
   }
 

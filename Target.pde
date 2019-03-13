@@ -26,7 +26,6 @@ public class Target {
     circle(xPos, yPos, (diameter * .4));
     fill(255, 255, 75);
     circle(xPos, yPos, (diameter * .2));
-    //circle(random(50,200), random(50,200), random(50,200));
   }
   
   //-------------------------getters--------------------------//
@@ -37,6 +36,10 @@ public class Target {
   
   public float getYPos() {
     return yPos;  
+  }
+  
+  public float getDiameter() {
+    return diameter;
   }
   
   //-------------------------setters--------------------------//
