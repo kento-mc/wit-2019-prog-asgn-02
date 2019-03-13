@@ -3,16 +3,17 @@ public class Player {
   //-------------------instance variables---------------------// 
 
   private String playerName;
-  private int[] gameShots;
+  private int[] shotScores;
   private int[] gameScores;
   private int shotCount;
   private int gameCount;
+  boolean shotTaken;
 
   //----------------------constructors------------------------//
 
   public Player(String playerName, int numberOfGames, int numberOfShots) {
     this.playerName = playerName;
-    gameShots = new int[numberOfShots];
+    shotScores = new int[numberOfShots];
     gameScores = new int[numberOfGames];
     shotCount = 0;
     gameCount = 0;
@@ -20,12 +21,11 @@ public class Player {
 
   //-------------------------methods--------------------------//
 
-  public void addShot(int shotScore) {   // adds new score to next available scores[] index
-    gameShots[0] = shotScore;            // FIX SHOTCOUNT INFINITE COUNTER
-    shotCount++;
+  public void addShot() {      // adds new score to next available gameShots[] index           
+      shotCount++;
   }  
 
-  public void addScore(int gameScore) {   // adds new score to next available scores[] index
+  public void addGameScore(int gameScore) {     // adds new score to next available gameScores[] index
     if (gameScore >= 0) {
       gameScores[gameCount] = gameScore;
       gameCount++;
@@ -82,5 +82,18 @@ public class Player {
     return shotCount;
   }
   
+  public int[] getShotScores() {
+    return shotScores;
+  }
+  
   //-------------------------setters--------------------------//
+
+  public void setShotCount(int shotCount) {
+    this.shotCount = shotCount;
+  }
+  
+  public void setShotScores(int shotScore) {
+    this.shotScores[shotCount] = shotScore;
+  }
+
 }

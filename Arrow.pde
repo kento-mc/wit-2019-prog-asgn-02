@@ -17,7 +17,11 @@ public class Arrow {
   //-------------------------methods--------------------------//
   
   public void display() {
-    if (yPos < height-arrowLength) {               // arrow in flight
+    if (yPos == target.getYPos()) {
+      rect(xPos, yPos, arrowWidth, arrowLength);   // shaft
+      line(xPos - arrowWidth/2, yPos, xPos + arrowWidth + arrowWidth/2, yPos);      // edge of arrowhead
+    } 
+    else if (yPos < height-arrowLength) {               // arrow in flight
       rect(xPos, yPos, arrowWidth, arrowLength);   // shaft
       triangle(xPos + arrowWidth/2, yPos - 10,     // top point
          xPos - arrowWidth/2, yPos,                // bottom left point

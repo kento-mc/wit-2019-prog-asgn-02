@@ -8,12 +8,14 @@ Arrow arrow;
 PowerMeter power;
 Player player;
 
+int shotCount = 0;
 int shotScore = 0;
 int gameScore = 0;
 int maxShots = 5;
 int maxGames = 5;
 int numberOfGamesPlayed = 0;
 float[] savedX;
+float afterShotCounter = 0;
 
 void setup() {
   size(600, 800);
@@ -35,8 +37,8 @@ void draw() {
   rect(0, height*.8, width, height*.2);
 
   target.display();
-  bow = new Bow(mouseX);
-  bow.display();
+  bow = new Bow(mouseX);                      // I could only get the bow to track mouseX  
+  bow.display();                              // by passing it in from the draw() method
   arrow.display();
   power.display();
 
@@ -45,7 +47,7 @@ void draw() {
     arrow.looseArrow();
   }
 
-  boolean landed = arrowLanded();             // REFACTOR W/ FOR LOOP
+  boolean landed = arrowLanded();             
   if (landed == true) {
     arrow.setYPos(target.getYPos());          // UPDATE W/ POWER
   }
@@ -53,56 +55,66 @@ void draw() {
   boolean hit = targetHit();
   float shotQuality = dist(arrow.getXPos(), arrow.getYPos(), target.getXPos(), target.getYPos());
   if (hit == true) {
-    if (shotQuality < (target.getDiameter() * .1)/2) {
+    afterShotCounter += .02;                  // control for delay before dialog box
+    if (shotQuality < (target.getDiameter() * .1)/2) {          // bulseye
       shotScore = 100;
-      player.addShot(shotScore);
-    } else if (dist(arrow.getXPos(), arrow.getYPos(), target.getXPos(), target.getYPos()) < (target.getDiameter() * .2)/2) {
+      player.setShotScores(shotScore);
+    } else if (shotQuality < (target.getDiameter() * .2)/2) {
       shotScore = 90;
-      player.addShot(shotScore);
-    } else if (dist(arrow.getXPos(), arrow.getYPos(), target.getXPos(), target.getYPos()) < (target.getDiameter() * .3)/2) {
+      player.setShotScores(shotScore);    
+    } else if (shotQuality < (target.getDiameter() * .3)/2) {
       shotScore = 80;
-      player.addShot(shotScore);
-    } else if (dist(arrow.getXPos(), arrow.getYPos(), target.getXPos(), target.getYPos()) < (target.getDiameter() * .4)/2) {
+      player.setShotScores(shotScore);
+    } else if (shotQuality < (target.getDiameter() * .4)/2) {
       shotScore = 70;
-      player.addShot(shotScore);
-    } else if (dist(arrow.getXPos(), arrow.getYPos(), target.getXPos(), target.getYPos()) < (target.getDiameter() * .5)/2) {
+      player.setShotScores(shotScore);
+    } else if (shotQuality < (target.getDiameter() * .5)/2) {
       shotScore = 60;
-      player.addShot(shotScore);
-    } else if (dist(arrow.getXPos(), arrow.getYPos(), target.getXPos(), target.getYPos()) < (target.getDiameter() * .6)/2) {
+      player.setShotScores(shotScore);
+    } else if (shotQuality < (target.getDiameter() * .6)/2) {
       shotScore = 50;
-      player.addShot(shotScore);
-    } else if (dist(arrow.getXPos(), arrow.getYPos(), target.getXPos(), target.getYPos()) < (target.getDiameter() * .7)/2) {
+      player.setShotScores(shotScore);
+    } else if (shotQuality < (target.getDiameter() * .7)/2) {
       shotScore = 40;
-      player.addShot(shotScore);
-    } else if (dist(arrow.getXPos(), arrow.getYPos(), target.getXPos(), target.getYPos()) < (target.getDiameter() * .8)/2) {
+      player.setShotScores(shotScore);
+    } else if (shotQuality < (target.getDiameter() * .8)/2) {
       shotScore = 30;
-      player.addShot(shotScore);
-    } else if (dist(arrow.getXPos(), arrow.getYPos(), target.getXPos(), target.getYPos()) < (target.getDiameter() * .9)/2) {
+      player.setShotScores(shotScore);
+    } else if (shotQuality < (target.getDiameter() * .9)/2) {
       shotScore = 20;
-      player.addShot(shotScore);
-    } else if (dist(arrow.getXPos(), arrow.getYPos(), target.getXPos(), target.getYPos()) < target.getDiameter()/2) {
+      player.setShotScores(shotScore);
+    } else if (shotQuality < target.getDiameter()/2) {
       shotScore = 10;
-      player.addShot(shotScore);
-    } else {
-      shotScore = 0;
-      player.addShot(shotScore);
+      player.setShotScores(shotScore);
     }
+  } else {
+    shotScore = 0;
+    player.setShotScores(shotScore);
   }
+  
+
 
   println("Target hit? " + targetHit() + "\n" +
     "Shot score: " + shotScore + "\n" +
     dist(arrow.getXPos(), arrow.getYPos(), target.getXPos(), target.getYPos()) + "\n" +
     (target.getDiameter() * .1)/2 + "\n" +
-    player.getShotCount());
+    "Shot count: " + player.getShotCount() + ", After shot counter: " + round(afterShotCounter));
+  
+  for (int i = 0; i < player.getShotScores().length; i++) {
+    println("Shot score " + (i+1) + " is: " + player.getShotScores()[i]);
+  }
+    
 }  // close draw() method
 
 
 //-------------------------methods--------------------------//
 
 void mouseClicked() {
-  savedX[0] = mouseX;
-  arrow.setXPos(savedX[0] + bow.getBowWidth()/2);
-  arrow.looseArrow();
+  if (arrow.getYPos() > target.getYPos()) {                 // arrow can't be moved after striking target
+    savedX[0] = mouseX;
+    arrow.setXPos(savedX[0] + bow.getBowWidth()/2);
+    arrow.looseArrow();
+  }
 }
 
 boolean arrowLoosed() {
@@ -123,10 +135,19 @@ boolean arrowLanded() {
 
 boolean targetHit() {
   if (arrow.getYPos() == target.getYPos() &&
-    dist(arrow.getXPos(), arrow.getYPos(), target.getXPos(), target.getYPos()) < (target.getDiameter()/2)) {
+    dist(arrow.getXPos(), arrow.getYPos(), target.getXPos(), target.getYPos()) < (target.getDiameter()/2)) { 
     return true;
   } else {
     return false;   
+  }
+}
+
+boolean shotTaken() {
+  if (afterShotCounter > 0) {
+    return true;
+  }
+  else {
+    return false;
   }
 }
 
