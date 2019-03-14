@@ -40,6 +40,10 @@ public class Arrow {
       yPos -= speed;
     }
   }
+  
+  public void resetArrow() {
+    setYPos(height-arrowLength);
+  }
 
 
   // arrowSpeed(float drawPower)

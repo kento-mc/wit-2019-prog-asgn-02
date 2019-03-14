@@ -8,6 +8,7 @@ Arrow arrow;
 PowerMeter power;
 Player player;
 
+int shotNum = 0;
 int shotCount = 0;
 int shotScore = 0;
 int gameScore = 0;
@@ -36,78 +37,89 @@ void draw() {
   quad(width*.25, height*.2, width*.75, height*.2, width, height*.8, 0, height*.8);
   rect(0, height*.8, width, height*.2);
 
-if (shotCount == 0) {
   target.display();
   bow = new Bow(mouseX);                      // I could only get the bow to track mouseX  
   bow.display();                              // by passing it in from the draw() method
   arrow.display();
   power.display();
 
-  boolean loosed = arrowLoosed();
-  if (loosed == true) {
-    arrow.looseArrow();
-  }
 
-  boolean landed = arrowLanded();             
-  if (landed == true) {
-    arrow.setYPos(target.getYPos());          // UPDATE W/ POWER
-  }
+
+  if (shotCount == shotNum) {                 // controls game flow, shot iteratin
+  
+    boolean loosed = arrowLoosed();
+    if (loosed == true) {
+      arrow.looseArrow();
+    }
+  
+    boolean landed = arrowLanded();             
+    if (landed == true) {
+      arrow.setYPos(target.getYPos());                            // UPDATE W/ POWER
+    }
+  
+    boolean hit = targetHit();
+    float shotQuality = dist(arrow.getXPos(), arrow.getYPos(), target.getXPos(), target.getYPos());
+    if (hit == true) {
+      if (shotQuality < (target.getDiameter() * .1)/2) {          // bulseye
+        shotScore = 100;
+        player.setShotScores(shotScore);
+      } else if (shotQuality < (target.getDiameter() * .2)/2) {
+        shotScore = 90;
+        player.setShotScores(shotScore);
+      } else if (shotQuality < (target.getDiameter() * .3)/2) {
+        shotScore = 80;
+        player.setShotScores(shotScore);
+      } else if (shotQuality < (target.getDiameter() * .4)/2) {
+        shotScore = 70;
+        player.setShotScores(shotScore);
+      } else if (shotQuality < (target.getDiameter() * .5)/2) {
+        shotScore = 60;
+        player.setShotScores(shotScore);
+      } else if (shotQuality < (target.getDiameter() * .6)/2) {
+        shotScore = 50;
+        player.setShotScores(shotScore);
+      } else if (shotQuality < (target.getDiameter() * .7)/2) {
+        shotScore = 40;
+        player.setShotScores(shotScore);
+      } else if (shotQuality < (target.getDiameter() * .8)/2) {
+        shotScore = 30;
+        player.setShotScores(shotScore);
+      } else if (shotQuality < (target.getDiameter() * .9)/2) {
+        shotScore = 20;
+        player.setShotScores(shotScore);
+      } else if (shotQuality < target.getDiameter()/2) {
+        shotScore = 10;
+        player.setShotScores(shotScore);
+      }   
+    } else {
+      shotScore = 0;
+      player.setShotScores(shotScore);
+    }
+    
+    boolean shotTaken = shotTaken();
+    if (shotTaken == true) {
+      shotCount++;
+      player.setShotCount(shotCount);
+    }
+      
+  }  // close if 
 
   boolean hit = targetHit();
-  float shotQuality = dist(arrow.getXPos(), arrow.getYPos(), target.getXPos(), target.getYPos());
   if (hit == true) {
-    afterShotCounter += .02;                  // control for delay before dialog box
-    if (shotQuality < (target.getDiameter() * .1)/2) {          // bulseye
-      shotScore = 100;
-      player.setShotScores(shotScore);
-    } else if (shotQuality < (target.getDiameter() * .2)/2) {
-      shotScore = 90;
-      player.setShotScores(shotScore);
-    } else if (shotQuality < (target.getDiameter() * .3)/2) {
-      shotScore = 80;
-      player.setShotScores(shotScore);
-    } else if (shotQuality < (target.getDiameter() * .4)/2) {
-      shotScore = 70;
-      player.setShotScores(shotScore);
-    } else if (shotQuality < (target.getDiameter() * .5)/2) {
-      shotScore = 60;
-      player.setShotScores(shotScore);
-    } else if (shotQuality < (target.getDiameter() * .6)/2) {
-      shotScore = 50;
-      player.setShotScores(shotScore);
-    } else if (shotQuality < (target.getDiameter() * .7)/2) {
-      shotScore = 40;
-      player.setShotScores(shotScore);
-    } else if (shotQuality < (target.getDiameter() * .8)/2) {
-      shotScore = 30;
-      player.setShotScores(shotScore);
-    } else if (shotQuality < (target.getDiameter() * .9)/2) {
-      shotScore = 20;
-      player.setShotScores(shotScore);
-    } else if (shotQuality < target.getDiameter()/2) {
-      shotScore = 10;
-      player.setShotScores(shotScore);
-    }   
-  } else {
-    shotScore = 0;
-    player.setShotScores(shotScore);
-  }
+    afterShotCounter += .2;                  // control for delay before dialog box opens
+  }    
   
-  boolean shotTaken = shotTaken();
-  if (shotTaken == true) {
-
-    shotCount++;
-    player.setShotCount(shotCount);
-  }
-  
-  JOptionPane.showConfirmDialog(null,
-  "Nice shot! You scored " + player.getShotScores()[shotCount] + "!" + 
-  "\n\nReady for your next shot?", "Hit!",
-  JOptionPane.YES_NO_OPTION);
-    
-}  // close test if 
-
-
+  if (afterShotCounter > 6 && shotCount > shotNum) {
+    int nextShot = JOptionPane.showConfirmDialog(null,
+                   "Nice shot! You scored " + player.getShotScores()[shotCount - 1] + "!" + 
+                   "\n\nReady for your next shot?", "Hit!",
+                   JOptionPane.YES_NO_OPTION);
+    if (nextShot == JOptionPane.YES_OPTION) {
+      arrow.resetArrow();
+      shotNum++;
+      afterShotCounter = 0;
+    }
+  }    
 
   println("Target hit? " + targetHit() + "\n" +
     "Shot score: " + shotScore + "\n" +
@@ -118,7 +130,6 @@ if (shotCount == 0) {
   for (int i = 0; i < player.getShotScores().length; i++) {
     println("Shot score " + (i+1) + " is: " + player.getShotScores()[i]);
   }
-
     
 }  // close draw() method
 
@@ -126,7 +137,7 @@ if (shotCount == 0) {
 //-------------------------methods--------------------------//
 
 void mouseClicked() {
-  if (arrow.getYPos() > target.getYPos()) {                 // arrow can't be moved after striking target
+  if (arrow.getYPos() > target.getYPos()) {         // arrow can't be moved after striking target
     savedX[0] = mouseX;
     arrow.setXPos(savedX[0] + bow.getBowWidth()/2);
     arrow.looseArrow();
