@@ -43,8 +43,6 @@ void draw() {
   arrow.display();
   power.display();
 
-
-
   if (shotCount == shotNum) {                 // controls game flow, shot iteratin
   
     boolean loosed = arrowLoosed();
@@ -110,16 +108,45 @@ void draw() {
   }    
   
   if (afterShotCounter > 6 && shotCount > shotNum) {
-    int nextShot = JOptionPane.showConfirmDialog(null,
-                   "Nice shot! You scored " + player.getShotScores()[shotCount - 1] + "!" + 
-                   "\n\nReady for your next shot?", "Hit!",
-                   JOptionPane.YES_NO_OPTION);
-    if (nextShot == JOptionPane.YES_OPTION) {
-      arrow.resetArrow();
-      shotNum++;
-      afterShotCounter = 0;
+    if (player.getShotScores().length == shotCount) {
+      JOptionPane.showMessageDialog(null,
+        "Nice shot! You scored " + player.getShotScores()[shotCount - 1] + "!" +
+        "\nThat was your last shot for this round.",
+        "Hit!",
+        JOptionPane.PLAIN_MESSAGE);
+      
+      int roundTotal = 0;
+      
+      for (int i = 0; i < 5; i++) {
+        roundTotal += player.getShotScores()[i];   
+      }
+      
+      JOptionPane.showMessageDialog(null,
+        "Your total score for this round is: " + roundTotal,
+        "Game Over",
+        JOptionPane.PLAIN_MESSAGE);    
+    }
+    else {
+    
+      int nextShot = JOptionPane.showConfirmDialog(null,
+                     "Nice shot! You scored " + player.getShotScores()[shotCount - 1] + "!" + 
+                     "\n\nReady for your next shot?", "Hit!",
+                     JOptionPane.YES_NO_OPTION);
+      if (nextShot == JOptionPane.YES_OPTION) {
+        arrow.resetArrow();
+        target.resetTarget();
+        shotNum++;
+        afterShotCounter = 0;
+      }
     }
   }    
+  
+ /* if (shotCount == player.getShotScores().length && afterShotCounter > 6) {
+    JOptionPane.showMessageDialog(null,
+    "Your total score is: " + "XXX",
+    "Game Over",
+    JOptionPane.PLAIN_MESSAGE);    
+  }*/
 
   println("Target hit? " + targetHit() + "\n" +
     "Shot score: " + shotScore + "\n" +

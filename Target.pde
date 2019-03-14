@@ -28,6 +28,12 @@ public class Target {
     circle(xPos, yPos, (diameter * .2));
   }
   
+  public void resetTarget() {
+    xPos = random((width * .3),(width * .7));
+    yPos = random((height * .2),(height * .5));
+    diameter = yPos/2;
+  }
+  
   //-------------------------getters--------------------------//
   
   public float getXPos() {
@@ -44,5 +50,11 @@ public class Target {
   
   //-------------------------setters--------------------------//
 
+  public void setXPos(float xPos) {
+    this.xPos = xPos;
+  }
   
+  public void setYPos(float yPos) {
+    this.yPos = yPos;
+  }
 }
