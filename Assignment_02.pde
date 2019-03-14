@@ -36,14 +36,13 @@ void draw() {
   quad(width*.25, height*.2, width*.75, height*.2, width, height*.8, 0, height*.8);
   rect(0, height*.8, width, height*.2);
 
-
+if (shotCount == 0) {
   target.display();
   bow = new Bow(mouseX);                      // I could only get the bow to track mouseX  
   bow.display();                              // by passing it in from the draw() method
   arrow.display();
   power.display();
 
-if (shotCount == 0) {
   boolean loosed = arrowLoosed();
   if (loosed == true) {
     arrow.looseArrow();
@@ -88,8 +87,7 @@ if (shotCount == 0) {
     } else if (shotQuality < target.getDiameter()/2) {
       shotScore = 10;
       player.setShotScores(shotScore);
-    }
-    
+    }   
   } else {
     shotScore = 0;
     player.setShotScores(shotScore);
@@ -97,20 +95,30 @@ if (shotCount == 0) {
   
   boolean shotTaken = shotTaken();
   if (shotTaken == true) {
+
     shotCount++;
     player.setShotCount(shotCount);
   }
+  
+  JOptionPane.showConfirmDialog(null,
+  "Nice shot! You scored " + player.getShotScores()[shotCount] + "!" + 
+  "\n\nReady for your next shot?", "Hit!",
+  JOptionPane.YES_NO_OPTION);
+    
+}  // close test if 
+
+
 
   println("Target hit? " + targetHit() + "\n" +
     "Shot score: " + shotScore + "\n" +
     dist(arrow.getXPos(), arrow.getYPos(), target.getXPos(), target.getYPos()) + "\n" +
     (target.getDiameter() * .1)/2 + "\n" +
-    "Shot count: " + player.getShotCount() + ", After shot counter: " + round(afterShotCounter));
+    "Shot count: " + player.getShotCount() + ", After shot counter: " + (afterShotCounter));
   
   for (int i = 0; i < player.getShotScores().length; i++) {
     println("Shot score " + (i+1) + " is: " + player.getShotScores()[i]);
   }
-}
+
     
 }  // close draw() method
 
