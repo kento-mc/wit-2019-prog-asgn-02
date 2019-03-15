@@ -17,7 +17,7 @@ public class Arrow {
   //-------------------------methods--------------------------//
   
   public void display() {
-    if (yPos == target.getYPos()) {
+    if (yPos == target.getYPos() - 20) {
       rect(xPos, yPos, arrowWidth, arrowLength);   // shaft
       line(xPos - arrowWidth/2, yPos, xPos + arrowWidth + arrowWidth/2, yPos);      // edge of arrowhead
     } 
@@ -36,8 +36,9 @@ public class Arrow {
   }
 
   public void looseArrow() {
-    if (yPos > target.getYPos()) {
+    if (yPos > target.getYPos() - 20) {
       yPos -= speed;
+      xPos += windSpeed;
     }
   }
   

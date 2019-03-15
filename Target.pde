@@ -18,14 +18,19 @@ public class Target {
     stroke(0);
     fill(255);
     circle(xPos, yPos, diameter);
+    circle(xPos, yPos, (diameter * .9));
     fill(0);
     circle(xPos, yPos, (diameter * .8));
+    circle(xPos, yPos, (diameter * .7));
     fill(10, 150, 225);
     circle(xPos, yPos, (diameter * .6));
+    circle(xPos, yPos, (diameter * .5));
     fill(255,0,0);
     circle(xPos, yPos, (diameter * .4));
+    circle(xPos, yPos, (diameter * .3));
     fill(255, 255, 75);
     circle(xPos, yPos, (diameter * .2));
+    circle(xPos, yPos, (diameter * .1));
   }
   
   public void resetTarget() {

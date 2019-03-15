@@ -1,4 +1,4 @@
-// RobinHoodTrainer v0.3
+// RobinHoodTrainer v0.4
 
 import javax.swing.JOptionPane;
 
@@ -17,6 +17,7 @@ int maxGames = 5;
 int numberOfGamesPlayed = 0;
 float[] savedX;
 float afterShotCounter = 0;
+float windSpeed;
 
 void setup() {
   size(600, 800);
@@ -28,6 +29,7 @@ void setup() {
   power = new PowerMeter();
   savedX = new float[2];
   player = new Player(JOptionPane.showInputDialog("Welcome young challenger. What is your name?"), 5, 5);
+  setWindSpeed();
 }
 
 void draw() {
@@ -43,16 +45,17 @@ void draw() {
   arrow.display();
   power.display();
 
-  if (shotCount == shotNum) {                 // controls game flow, shot iteratin
+  if (shotCount == shotNum) {                 // controls game flow, shot iteration
   
     boolean loosed = arrowLoosed();
     if (loosed == true) {
       arrow.looseArrow();
+      //arrow.setXPos(arrow.getXPos() + windSpeed);                  // WINDSPEED
     }
   
     boolean landed = arrowLanded();             
     if (landed == true) {
-      arrow.setYPos(target.getYPos());                            // UPDATE W/ POWER
+      arrow.setYPos(target.getYPos() - 20);                            // UPDATE W/ POWER
     }
   
     boolean hit = targetHit();
@@ -100,10 +103,10 @@ void draw() {
       player.setShotCount(shotCount);
     }
       
-  }  // close if 
+  }  // close control flow if 
 
-  boolean hit = targetHit();
-  if (hit == true) {
+  boolean landed = arrowLanded();
+  if (landed == true) {
     afterShotCounter += .2;                  // control for delay before dialog box opens
   }    
   
@@ -135,23 +138,20 @@ void draw() {
       if (nextShot == JOptionPane.YES_OPTION) {
         arrow.resetArrow();
         target.resetTarget();
+        setWindSpeed();
+        power.resetPower();
         shotNum++;
         afterShotCounter = 0;
       }
-    }
-  }    
+    }  // close else
+  }  // close outer if    
   
- /* if (shotCount == player.getShotScores().length && afterShotCounter > 6) {
-    JOptionPane.showMessageDialog(null,
-    "Your total score is: " + "XXX",
-    "Game Over",
-    JOptionPane.PLAIN_MESSAGE);    
-  }*/
-
+  textSize(24);
+  text("Wind Speed: " + windSpeed, width/16, height/20);
+  
   println("Target hit? " + targetHit() + "\n" +
     "Shot score: " + shotScore + "\n" +
-    dist(arrow.getXPos(), arrow.getYPos(), target.getXPos(), target.getYPos()) + "\n" +
-    (target.getDiameter() * .1)/2 + "\n" +
+    "Wind speed: " + windSpeed + "\n" +
     "Shot count: " + player.getShotCount() + ", After shot counter: " + (afterShotCounter));
   
   for (int i = 0; i < player.getShotScores().length; i++) {
@@ -160,12 +160,12 @@ void draw() {
     
 }  // close draw() method
 
-
 //-------------------------methods--------------------------//
 
 void mouseClicked() {
-  if (arrow.getYPos() > target.getYPos()) {         // arrow can't be moved after striking target
+  if (arrow.getYPos() > target.getYPos() - 20) {         // arrow can't be moved after striking target
     savedX[0] = mouseX;
+    power.clickStop();
     arrow.setXPos(savedX[0] + bow.getBowWidth()/2);
     arrow.looseArrow();
   }
@@ -180,7 +180,7 @@ boolean arrowLoosed() {
 }
 
 boolean arrowLanded() {
-  if (arrow.getYPos() > target.getYPos()) {
+  if (arrow.getYPos() > target.getYPos() -20) {    // add target.getDiameter()/2 * power.powerAdjust()
     return false;
   } else {
     return true;
@@ -188,7 +188,7 @@ boolean arrowLanded() {
 }
 
 boolean targetHit() {
-  if (arrow.getYPos() == target.getYPos() &&
+  if (arrow.getYPos() == target.getYPos() - 20 &&
     dist(arrow.getXPos(), arrow.getYPos(), target.getXPos(), target.getYPos()) < (target.getDiameter()/2)) { 
     return true;
   } else {
@@ -196,16 +196,14 @@ boolean targetHit() {
   }
 }
 
-boolean shotTaken() {
+boolean shotTaken() {                    
   if (afterShotCounter > 0) {
     return true;
-  }
-  else {
+  } else {
     return false;
   }
 }
 
-
-// windDirection()
-// windSpeed()
-// powerMeter()
+void setWindSpeed() {
+  windSpeed = random(-20,20);
+}
