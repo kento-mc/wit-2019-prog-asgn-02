@@ -4,14 +4,14 @@ public class Bow {
 
   private float xPos = 0;    
   private float yPos = height-10;
-  private int bowWidth = 100;
+  private float bowWidth = width/6;
   
   // drawPower
 
   //----------------------constructors------------------------//
 
   public Bow(float xPos) {
-    this.xPos = xPos;
+    this.xPos = xPos - bowWidth/2;
   }
 
   //-------------------------methods--------------------------//
@@ -31,7 +31,7 @@ public class Bow {
     return yPos;
   }
   
- public int getBowWidth() {
+ public float getBowWidth() {
     return bowWidth;
  }
 
@@ -39,14 +39,14 @@ public class Bow {
   //-------------------------setters--------------------------//
   
   public void setXPos(float xPos) {
-    this.xPos = xPos;
+    this.xPos = xPos - bowWidth/2;
   }
   
   public void setYPos(float yPos) {
     this.yPos = yPos;  
   }
   
-  public void setBowWidth(int bowWidth) {
+  public void setBowWidth(float bowWidth) {
     this.bowWidth = bowWidth;  
   }
 

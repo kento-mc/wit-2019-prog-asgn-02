@@ -78,6 +78,10 @@ public class Player {
 
   //-------------------------getters--------------------------//
 
+  public String getPlayerName() {
+    return playerName;
+  }
+    
   public int getShotCount() {
     return shotCount;
   }

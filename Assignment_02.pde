@@ -147,7 +147,8 @@ void draw() {
   }  // close outer if    
   
   textSize(24);
-  text("Wind Speed: " + windSpeed, width/16, height/20);
+  text("Player: " + player.getPlayerName(), width/32, height/32);
+  text("Wind Speed: " + windSpeed, width/32, height/16);
   
   println("Target hit? " + targetHit() + "\n" +
     "Shot score: " + shotScore + "\n" +
@@ -168,7 +169,7 @@ void mouseClicked() {
   if (arrow.getYPos() > target.getYPos() + (target.getDiameter()/2) * power.adjust()) {         // arrow can't be moved after striking target
     savedX[0] = mouseX;
     power.clickStop();
-    arrow.setXPos(savedX[0] + bow.getBowWidth()/2);
+    arrow.setXPos(savedX[0]);
     arrow.looseArrow();
   }
 }
