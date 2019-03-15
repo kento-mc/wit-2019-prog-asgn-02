@@ -2,12 +2,14 @@ public class PowerMeter {
 
   //-------------------instance variables---------------------// 
 
-  private int boxWidth = 50;
-  private int boxHeight = 150;
-  private float barHeight = height*.01;
-  private float boxYPos = (height * .7);
-  private float barYPos = (height * .7 + boxHeight - barHeight);
-  private float speed = 5;
+  private float boxWidth = width/12;
+  private float boxHeight = height * .3;
+  private float boxXPos = width*.01;
+  private float boxYPos = (height * .6);
+  private float barHeight = height*.02;
+  private float barYPos = (height * .6 + boxHeight - barHeight);
+  private float greenYPos = boxYPos + (boxHeight/2 - barHeight);
+  private float speed = -barHeight;
 
   //----------------------constructors------------------------//
 
@@ -18,53 +20,58 @@ public class PowerMeter {
   //-------------------------methods--------------------------//
 
   public void display() {
-    rect(width*.01, boxYPos, boxWidth, boxHeight);
+    rect(boxXPos, boxYPos, boxWidth, boxHeight);
     fill(125, 250, 115);
-    rect(width*.01, boxYPos + (boxHeight/2 - barHeight/2), boxWidth, barHeight*2);
+    rect(boxXPos, greenYPos, boxWidth, barHeight*2);
     fill(200);
-    rect(width*.01, barYPos, boxWidth, barHeight);
+    rect(boxXPos, barYPos, boxWidth, barHeight);
 
     barYPos -= speed;
 
-    if (barYPos < boxYPos + barHeight || barYPos > (boxYPos + boxHeight - (height * .01))) {
+    if (barYPos < boxYPos || barYPos > (boxYPos + boxHeight - barHeight)) {
       speed = (speed * -1);
     }
   }
   
   public void resetPower() {
-    setYPos((height * .7 + boxHeight - barHeight));
-    setSpeed(5);
+    setYPos(boxYPos + boxHeight - barHeight);
+    setSpeed(-barHeight);
   }
   
   public void clickStop() {
     setSpeed(0);
     
-    if (speed > 0) {
-      barYPos -=10;
+    if (barYPos < boxHeight/2) {
+      barYPos += barHeight/2;
     } else {
-      barYPos += 5;
+      barYPos -= barHeight/2;
     }
   }
   
-  /*public float powerAdjust() {
+  public float adjust() {
     
-    if (barYPos < green box) {
-      float overpowered = dist calculation;
-      return overpowered;
-    } else if (barYPos > green box) {
-      float underpowered = dist calculation;
+    float topDist = dist(boxXPos, greenYPos, boxXPos, boxYPos + height/40);
+    float botDist = dist(boxXPos, greenYPos + barHeight, boxXPos, boxYPos + boxHeight - height/40);
+    float topBarDist = dist(boxXPos, barYPos, boxXPos, greenYPos);
+    float botBarDist = dist(boxXPos, barYPos + barHeight, boxXPos, greenYPos + barHeight*2);
+    
+    if (barYPos < greenYPos) {
+      float overpowered = topBarDist/topDist;
+      return overpowered * -1;
+    } else if (barYPos > greenYPos + barHeight) {
+      float underpowered = botBarDist/botDist;
       return underpowered;
     } else {
-      float powered = 1;
-      return powered
+      float powered = 0;
+      return powered;
     }
-  }*/
+  }
   
   
 
   //-------------------------getters--------------------------//
   
-  public int getBoxHeight() {
+  public float getBoxHeight() {
     return boxHeight;
   }
   

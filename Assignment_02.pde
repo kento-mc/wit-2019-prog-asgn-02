@@ -55,7 +55,7 @@ void draw() {
   
     boolean landed = arrowLanded();             
     if (landed == true) {
-      arrow.setYPos(target.getYPos() - 20);                            // UPDATE W/ POWER
+      arrow.setYPos(target.getYPos() + (target.getDiameter()/2) * power.adjust());     // UPDATE W/ POWER
     }
   
     boolean hit = targetHit();
@@ -157,13 +157,15 @@ void draw() {
   for (int i = 0; i < player.getShotScores().length; i++) {
     println("Shot score " + (i+1) + " is: " + player.getShotScores()[i]);
   }
+  
+  println(power.adjust());
     
 }  // close draw() method
 
 //-------------------------methods--------------------------//
 
 void mouseClicked() {
-  if (arrow.getYPos() > target.getYPos() - 20) {         // arrow can't be moved after striking target
+  if (arrow.getYPos() > target.getYPos() + (target.getDiameter()/2) * power.adjust()) {         // arrow can't be moved after striking target
     savedX[0] = mouseX;
     power.clickStop();
     arrow.setXPos(savedX[0] + bow.getBowWidth()/2);
@@ -180,7 +182,7 @@ boolean arrowLoosed() {
 }
 
 boolean arrowLanded() {
-  if (arrow.getYPos() > target.getYPos() -20) {    // add target.getDiameter()/2 * power.powerAdjust()
+  if (arrow.getYPos() > target.getYPos() + (target.getDiameter()/2) * power.adjust()) {    // add target.getDiameter()/2 * power.powerAdjust()
     return false;
   } else {
     return true;
@@ -188,7 +190,7 @@ boolean arrowLanded() {
 }
 
 boolean targetHit() {
-  if (arrow.getYPos() == target.getYPos() - 20 &&
+  if (arrow.getYPos() == target.getYPos() + (target.getDiameter()/2) * power.adjust() &&
     dist(arrow.getXPos(), arrow.getYPos(), target.getXPos(), target.getYPos()) < (target.getDiameter()/2)) { 
     return true;
   } else {
