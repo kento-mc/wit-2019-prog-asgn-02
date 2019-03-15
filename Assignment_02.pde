@@ -146,6 +146,7 @@ void draw() {
     }  // close else
   }  // close outer if    
   
+  fill(255);
   textSize(24);
   text("Player: " + player.getPlayerName(), width/32, height/32);
   text("Wind Speed: " + windSpeed, width/32, height/16);
