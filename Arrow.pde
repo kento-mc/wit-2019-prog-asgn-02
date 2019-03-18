@@ -38,7 +38,7 @@ public class Arrow {
   public void looseArrow() {
     if (yPos > target.getYPos() + (target.getDiameter()/2) * power.adjust()) {
       yPos -= speed;
-      xPos += windSpeed;
+      xPos += wind.getWindSpeed();
     }
   }
   
@@ -46,10 +46,6 @@ public class Arrow {
     setYPos(height-arrowLength);
   }
 
-
-  // arrowSpeed(float drawPower)
-  // arrowTrajectory()
-  
   //-------------------------getters--------------------------//
   
   public float getXPos() {

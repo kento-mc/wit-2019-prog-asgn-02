@@ -2,14 +2,14 @@ public class PowerMeter {
 
   //-------------------instance variables---------------------// 
 
-  private float boxWidth = width/12;
-  private float boxHeight = height * .3;
-  private float boxXPos = width*.01;
+  private float boxWidth = (width/12);
+  private float boxHeight = (height * .3);
+  private float boxXPos = (width * .01);
   private float boxYPos = (height * .6);
-  private float barHeight = height*.02;
+  private float barHeight = (height * .02);
   private float barYPos = (height * .6 + boxHeight - barHeight);
   private float greenYPos = boxYPos + (boxHeight/2 - barHeight);
-  private float speed = -barHeight;
+  private float speed = (-barHeight * .7);
 
   //----------------------constructors------------------------//
 
@@ -35,7 +35,7 @@ public class PowerMeter {
   
   public void resetPower() {
     setYPos(boxYPos + boxHeight - barHeight);
-    setSpeed(-barHeight);
+    setSpeed(-barHeight * .7);
   }
   
   public void clickStop() {

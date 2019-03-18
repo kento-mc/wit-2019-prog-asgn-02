@@ -1,6 +1,6 @@
 public class Bow {
   
-//-------------------instance variables---------------------// 
+  //-------------------instance variables---------------------// 
 
   private float xPos = 0;    
   private float yPos = height-10;
@@ -50,6 +50,4 @@ public class Bow {
     this.bowWidth = bowWidth;  
   }
 
-}  
-  
-  
+}   

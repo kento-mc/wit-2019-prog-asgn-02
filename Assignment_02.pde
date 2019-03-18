@@ -1,12 +1,13 @@
-// RobinHoodTrainer v0.4
+// RobinHoodTrainer v0.5
 
 import javax.swing.JOptionPane;
 
+Player player;
 Target target;
 Bow bow;
 Arrow arrow;
 PowerMeter power;
-Player player;
+Wind wind;
 
 int shotNum = 0;
 int shotCount = 0;
@@ -17,19 +18,19 @@ int maxGames = 5;
 int numberOfGamesPlayed = 0;
 float[] savedX;
 float afterShotCounter = 0;
-float windSpeed;
 
 void setup() {
   size(600, 800);
   frameRate(30);
   noCursor();
 
+  player = new Player(JOptionPane.showInputDialog("Welcome young challenger. What is your name?"), 5, 5);
   target = new Target();
   arrow = new Arrow();
   power = new PowerMeter();
-  savedX = new float[2];
-  player = new Player(JOptionPane.showInputDialog("Welcome young challenger. What is your name?"), 5, 5);
-  setWindSpeed();
+  savedX = new float[1];          // not sure this needs to be an array
+  wind = new Wind();
+  
 }
 
 void draw() {
@@ -39,18 +40,19 @@ void draw() {
   quad(width*.25, height*.2, width*.75, height*.2, width, height*.8, 0, height*.8);
   rect(0, height*.8, width, height*.2);
 
+  player.display();
   target.display();
   bow = new Bow(mouseX);                      // I could only get the bow to track mouseX  
   bow.display();                              // by passing it in from the draw() method
   arrow.display();
   power.display();
+  wind.display();
 
   if (shotCount == shotNum) {                 // controls game flow, shot iteration
   
     boolean loosed = arrowLoosed();
     if (loosed == true) {
       arrow.looseArrow();
-      //arrow.setXPos(arrow.getXPos() + windSpeed);                  // WINDSPEED
     }
   
     boolean landed = arrowLanded();             
@@ -92,7 +94,7 @@ void draw() {
         shotScore = 10;
         player.setShotScores(shotScore);
       }   
-    } else {
+    } else if (arrowLanded() == true) {
       shotScore = 0;
       player.setShotScores(shotScore);
     }
@@ -138,7 +140,7 @@ void draw() {
       if (nextShot == JOptionPane.YES_OPTION) {
         arrow.resetArrow();
         target.resetTarget();
-        setWindSpeed();
+        wind.setWindSpeed();
         power.resetPower();
         shotNum++;
         afterShotCounter = 0;
@@ -146,14 +148,9 @@ void draw() {
     }  // close else
   }  // close outer if    
   
-  fill(255);
-  textSize(24);
-  text("Player: " + player.getPlayerName(), width/32, height/32);
-  text("Wind Speed: " + windSpeed, width/32, height/16);
-  
   println("Target hit? " + targetHit() + "\n" +
     "Shot score: " + shotScore + "\n" +
-    "Wind speed: " + windSpeed + "\n" +
+    "Wind speed: " + wind.getWindSpeed() + "\n" +
     "Shot count: " + player.getShotCount() + ", After shot counter: " + (afterShotCounter));
   
   for (int i = 0; i < player.getShotScores().length; i++) {
@@ -206,8 +203,4 @@ boolean shotTaken() {
   } else {
     return false;
   }
-}
-
-void setWindSpeed() {
-  windSpeed = random(-20,20);
 }
