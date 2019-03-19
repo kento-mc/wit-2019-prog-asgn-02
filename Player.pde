@@ -4,22 +4,25 @@ public class Player {
 
   private String playerName;
   private int[] shotScores;
-  private int[] gameScores;
+  private int[] roundScores;
   private int shotCount;
-  private int gameCount;
+  private int roundCount;
   boolean shotTaken;
 
   //----------------------constructors------------------------//
 
-  public Player(String playerName, int numberOfGames, int numberOfShots) {
+  public Player(String playerName, int numberOfRounds, int numberOfShots) {
     this.playerName = playerName;
+    roundScores = new int[numberOfRounds];
     shotScores = new int[numberOfShots];
-    for (int i = 0; i < shotScores.length; i++) {
-      shotScores[i] = -1;
+    for (int i = 0; i < shotScores.length; i++) {  // initialize all array positions to -1
+      shotScores[i] = -1;                          // to distinguish from scores of 0
     }
-    gameScores = new int[numberOfGames];
+    for (int i = 0; i < roundScores.length; i++) {
+      roundScores[i] = -1;
+    }
     shotCount = 0;
-    gameCount = 0;
+    roundCount = 0;
   }
 
   //-------------------------methods--------------------------//
@@ -29,37 +32,52 @@ public class Player {
     textSize(24);
     stroke(0);
     textAlign(LEFT);
-    text("Player: " + player.getPlayerName(), width/32, height/32);
+    text("Player: " + player.getPlayerName(), width/32, height/24);
     textSize(20);
+    text("Round " + (roundCount + 1), width/32, height/14);
     text("Shots", width/32, height/5.3);
-    line(width/32, height/5, width/6, height/5);
+    line(width/32, height/5, width/8.5, height/5);
+    text("Rounds", width * .85, height/5.3);
+    line(width * .85, height/5, width * .97, height/5);
     textSize(16);
     
     float scoresY = height/4.3;
-    for (int i = 0; i < player.getShotScores().length; i++) {
+    for (int i = 0; i < shotScores.length; i++) {
       if (shotScores[i] >= 0) {
         text((i+1) + " : " + shotScores[i], width/32, scoresY);
         scoresY += height/32;
       }
     }
-
-    /*text("1 : " + shotScores[0] + "\n" +
-         "2 : " + shotScores[1] + "\n" +
-         "3 : " + shotScores[2] + "\n" +
-         "4 : " + shotScores[3] + "\n" +
-         "5 : " + shotScores[4], width/32, height/4.3);*/
+    
+    float roundsY = height/4.3;
+    for (int i = 0; i < roundScores.length; i++) {
+      if (roundScores[i] >= 0) {
+        text((i+1) + " : " + roundScores[i], width * .85, roundsY);
+        roundsY += height/32;
+      }
+    }
+  }
+  
+  public void resetPlayer() {
+    for (int i = 0; i < shotScores.length; i++) {  // initialize all array positions to -1
+      shotScores[i] = -1;                          // to distinguish from scores of 0
+    }
   }
 
   public void addShot() {      // adds new score to next available gameShots[] index           
       shotCount++;
   }  
 
-  public void addGameScore(int gameScore) {     // adds new score to next available gameScores[] index
-    if (gameScore >= 0) {
-      gameScores[gameCount] = gameScore;
-      gameCount++;
+  public void addRoundScore(int roundScore) {     // adds new score to next available gameScores[] index
+    if (roundScore >= 0) {
+      roundScores[roundCount] = roundScore;
+      roundCount++;
     }
   } 
+  
+  public void resetShotCount() {
+    shotCount = 0;
+  }
   
 
 /*
@@ -88,6 +106,14 @@ public class Player {
     return shotScores;
   }
   
+  public int getRoundCount() {
+    return roundCount; 
+  }
+  
+  public int[] getRoundScores() {
+    return roundScores; 
+  }
+  
   //-------------------------setters--------------------------//
 
   public void setShotCount(int shotCount) {
@@ -96,6 +122,14 @@ public class Player {
   
   public void setShotScores(int shotScore) {
     this.shotScores[shotCount] = shotScore;
+  }
+  
+  public void setRoundCount(int roundCount) {
+    this.roundCount = roundCount; 
+  }
+  
+  public void setRoundScores(int roundScore) {
+    this.roundScores[roundCount] = roundScore;
   }
 
 }

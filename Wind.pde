@@ -15,15 +15,30 @@ public class Wind {
   void display() {
     fill(255);
     textAlign(CENTER);
-    text("Wind", width/6, height/12);    
-    fill(255,0,0);
-    textSize(20);
-    text(nf(abs(windSpeed), 0, 2) + " km/h", width/6, height/8);
-    rect(width/30, height/11, width/3.8, height/100);
-    if (windSpeed < 0) {
-      triangle(width/36, height/10.5, width/18, height/13.2, width/18, height/8.8);
+    textSize(24);
+    text("Wind", width * .7 + width/7, height/24);  
+    if (abs(windSpeed) < 3.33) {                        // windSpeed indicator changes color based on speed
+      fill(55,235,0);
+    } else if (abs(windSpeed) < 6.67) {
+      fill(175,250,0);
+    } else if (abs(windSpeed) < 10) {
+      fill(255,255,0);
+    } else if (abs(windSpeed) < 13.33) {
+      fill(255,200,0);
+    } else if (abs(windSpeed) < 16.67) {
+      fill(255,125,0);
     } else {
-      triangle(width/35 + width/3.5, height/10.5, width/18 + width/4.3, height/13.2, width/18 + width/4.3, height/8.8);
+      fill(255,0,0);
+    }
+    textSize(20);   
+    text(nf(abs(windSpeed), 0, 2) + " km/h", width * .7 + width/7, height/12);  // https://forum.processing.org/two/discussion/23814/#Comment_104014
+    rect(width * .71, height/21, width/3.8, height/100);
+    if (windSpeed < 0) {
+      triangle(width * .7, height/19, width * .7 + width/50, height/28,
+               width * .7 + width/50, height/14);
+    } else {
+      triangle(width * .7 + width/3.5, height/19, width * .7 + width/3.5 - width/50,
+               height/28, width * .7 + width/3.5 - width/50, height/14);
     }
   }
  
