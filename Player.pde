@@ -13,8 +13,8 @@ public class Player {
 
   public Player(String playerName, int numberOfRounds, int numberOfShots) {
     this.playerName = playerName;
-    roundScores = new int[numberOfRounds];
     shotScores = new int[numberOfShots];
+    roundScores = new int[numberOfRounds];    
     for (int i = 0; i < shotScores.length; i++) {  // initialize all array positions to -1
       shotScores[i] = -1;                          // to distinguish from scores of 0
     }
@@ -22,7 +22,7 @@ public class Player {
       roundScores[i] = -1;
     }
     shotCount = 0;
-    roundCount = 0;
+    roundCount = 1;
   }
 
   //-------------------------methods--------------------------//
@@ -34,7 +34,7 @@ public class Player {
     textAlign(LEFT);
     text("Player: " + player.getPlayerName(), width/32, height/24);
     textSize(20);
-    text("Round " + (roundCount + 1), width/32, height/14);
+    text("Round " + roundCount, width/32, height/14);
     text("Shots", width/32, height/5.3);
     line(width/32, height/5, width/8.5, height/5);
     text("Rounds", width * .85, height/5.3);
@@ -52,7 +52,7 @@ public class Player {
     float roundsY = height/4.3;
     for (int i = 0; i < roundScores.length; i++) {
       if (roundScores[i] >= 0) {
-        text((i+1) + " : " + roundScores[i], width * .85, roundsY);
+        text((i) + " : " + roundScores[i], width * .85, roundsY);
         roundsY += height/32;
       }
     }

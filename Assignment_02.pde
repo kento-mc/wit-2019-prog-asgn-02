@@ -27,15 +27,17 @@ void setup() {
   noCursor();
 
   String playerName =(JOptionPane.showInputDialog("A challenger approaches. What is your name?", "Player 1"));
-  player = new Player(playerName, Integer.parseInt(JOptionPane.showInputDialog("Welcome " + playerName + "!\n" +
-                                                  "How many rounds would you like to play?", "5")),
-     Integer.parseInt(JOptionPane.showInputDialog("And how many shots per round would you like to attempt?", "5")));
+  player = new Player(playerName, Integer.parseInt(JOptionPane.showInputDialog(
+                                  "Welcome " + playerName + "!\n" +
+                                  "How many rounds would you like to play?", "5")),
+                                  Integer.parseInt(JOptionPane.showInputDialog(
+                                  "And how many shots per round would you like to attempt?", "5")));
   target = new Target();
   arrow = new Arrow();
   power = new PowerMeter();
-  savedX = new float[1];          // not sure this needs to be an array
   wind = new Wind();
-  
+  savedX = new float[1];          // not sure this needs to be an array
+    
 }
 
 void draw() {
@@ -159,17 +161,17 @@ void draw() {
       
       int roundTotal = 0;
       
-      for (int i = 0; i < 5; i++) {
+      for (int i = 0; i < player.getShotScores().length; i++) {
         roundTotal += player.getShotScores()[i];   
       }
             
       JOptionPane.showMessageDialog(null,
-        "Your total score for round " + (roundCount+1) + ": " + roundTotal + "\n\n" +
+        "Your total score for round " + player.getRoundCount() + ": " + roundTotal + "\n\n" +
         "Your average shot score: " + roundTotal/player.getShotScores().length,
-        "End of Round " + (roundCount+1),
+        "End of Round " + player.getRoundCount(),
         JOptionPane.PLAIN_MESSAGE); 
       
-      if (roundCount < player.getRoundScores().length) {  
+      if (player.getRoundCount() < player.getRoundScores().length) {  
         int nextRound = JOptionPane.showConfirmDialog(null,
                      "Would you like to continue to the next round?", "Ready for more?",
                      JOptionPane.YES_NO_OPTION);
@@ -262,16 +264,9 @@ void draw() {
     }  // close else
   }  // close outer if      
   
-  println("Target hit? " + targetHit() + "\n" +
-    "Shot score: " + shotScore + "\n" +
-    "Wind speed: " + wind.getWindSpeed() + "\n" +
-    "Shot count: " + player.getShotCount() + ", After shot counter: " + (afterShotCounter));
+  println("roundCount: " + roundCount);
+  println("player.getRoundCount(): " + player.getRoundCount());
   
-  for (int i = 0; i < player.getShotScores().length; i++) {
-    println("Shot score " + (i+1) + " is: " + player.getShotScores()[i]);
-  }
-  
-  println(power.adjust());
     
 }  // close draw() method
 
