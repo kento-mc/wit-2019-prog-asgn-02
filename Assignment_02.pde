@@ -13,7 +13,7 @@ String playerName;
 int shotNum = 0;
 int shotCount = 0;
 int shotScore = 0;
-int roundCount = 0;
+//int roundCount = 0;
 int roundScore = 0;
 int maxShots = 5;
 int maxRounds = 3;
@@ -264,7 +264,7 @@ void draw() {
     }  // close else
   }  // close outer if      
   
-  println("roundCount: " + roundCount);
+  //println("roundCount: " + roundCount);
   println("player.getRoundCount(): " + player.getRoundCount());
   
     
