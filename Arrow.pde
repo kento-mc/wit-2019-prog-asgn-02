@@ -45,6 +45,10 @@ public class Arrow {
   public void resetArrow() {
     setYPos(height-arrowLength);
   }
+  
+  public void resetArrows() {
+    // reset arrows array
+  }
 
   //-------------------------getters--------------------------//
   

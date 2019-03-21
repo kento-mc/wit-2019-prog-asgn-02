@@ -10,6 +10,7 @@ PowerMeter power;
 Wind wind;
 
 String playerName;
+Arrow[] arrows;
 int shotNum = 0;
 int shotCount = 0;
 int shotScore = 0;
@@ -32,6 +33,7 @@ void setup() {
                                   "How many rounds would you like to play?", "5")),
                                   Integer.parseInt(JOptionPane.showInputDialog(
                                   "And how many shots per round would you like to attempt?", "5")));
+  arrows = new Arrow[player.getRoundScores().length];
   target = new Target();
   arrow = new Arrow();
   power = new PowerMeter();
@@ -265,6 +267,8 @@ void draw() {
   }  // close outer if      
   
   //println("roundCount: " + roundCount);
+  println(shotCount);
+  println(shotNum);
   println("player.getRoundCount(): " + player.getRoundCount());
   
     
