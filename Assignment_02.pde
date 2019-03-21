@@ -33,13 +33,21 @@ void setup() {
                                   "How many rounds would you like to play?", "5")),
                                   Integer.parseInt(JOptionPane.showInputDialog(
                                   "And how many shots per round would you like to attempt?", "5")));
-  arrows = new Arrow[player.getRoundScores().length];
+  arrows = new Arrow[player.getShotScores().length];
+  
+  for (int i = 0; i < player.getShotScores().length; i++) {
+    arrows[i] = new Arrow();
+  }
+  
   target = new Target();
-  arrow = new Arrow();
+  //arrow = new Arrow();
   power = new PowerMeter();
   wind = new Wind();
   savedX = new float[1];          // not sure this needs to be an array
-    
+  
+  for (int i = 0; i < player.getShotScores().length; i++) {
+    println(arrows[i]);
+  }
 }
 
 void draw() {
@@ -53,7 +61,8 @@ void draw() {
   target.display();
   bow = new Bow(mouseX);                      // I could only get the bow to track mouseX  
   bow.display();                              // by passing it in from the draw() method
-  arrow.display();
+  //arrow.display();
+  arrows[shotNum].display();    // XXX working on arrows array
   power.display();
   wind.display();
 
@@ -61,16 +70,16 @@ void draw() {
   
     boolean loosed = arrowLoosed();
     if (loosed == true) {
-      arrow.looseArrow();
+      arrows[shotNum].looseArrow();    // XXX working on arrows array
     }
   
     boolean landed = arrowLanded();             
     if (landed == true) {
-      arrow.setYPos(target.getYPos() + (target.getDiameter()/2) * power.adjust());     
+      arrows[shotNum].setYPos(target.getYPos() + (target.getDiameter()/2) * power.adjust());    // XXX working on arrows array     
     }
   
     boolean hit = targetHit();
-    float shotQuality = dist(arrow.getXPos(), arrow.getYPos(), target.getXPos(), target.getYPos());
+    float shotQuality = dist(arrows[shotNum].getXPos(), arrows[shotNum].getYPos(), target.getXPos(), target.getYPos());
     if (hit == true) {
       if (shotQuality < (target.getDiameter() * .1)/2) {          // bullseye
         shotScore = 100;
@@ -182,7 +191,8 @@ void draw() {
             player.resetPlayer();
             player.resetShotCount();
             player.addRoundScore(roundTotal);
-            arrow.resetArrow();
+            //arrow.resetArrow();
+            resetArrows();          // XXX working on arrows array
             target.resetTarget();
             wind.setWindSpeed();
             power.resetPower();
@@ -245,7 +255,7 @@ void draw() {
       }  
       
       if (nextShot == JOptionPane.YES_OPTION) {
-        arrow.resetArrow();
+        arrows[shotNum].resetArrow();
         target.resetTarget();
         wind.setWindSpeed();
         power.resetPower();
@@ -256,7 +266,7 @@ void draw() {
           "Take a quick breather and get your head back in the game. \n\nHit OK when you're ready",
           "Don't get distracted",
           JOptionPane.PLAIN_MESSAGE);       
-        arrow.resetArrow();
+        arrows[shotNum].resetArrow();
         target.resetTarget();
         wind.setWindSpeed();
         power.resetPower();
@@ -277,16 +287,22 @@ void draw() {
 //-------------------------methods--------------------------//
 
 void mouseClicked() {
-  if (arrow.getYPos() > target.getYPos() + (target.getDiameter()/2) * power.adjust()) {         // arrow can't be moved after striking target
+  if (arrows[shotNum].getYPos() > target.getYPos() + (target.getDiameter()/2) * power.adjust()) {         // arrow can't be moved after striking target
     savedX[0] = mouseX;
     power.clickStop();
-    arrow.setXPos(savedX[0]);
-    arrow.looseArrow();
+    arrows[shotNum].setXPos(savedX[0]);
+    arrows[shotNum].looseArrow();
+  }
+}
+
+void resetArrows() {
+  for (int i = 0; i < arrows.length; i++) {
+    arrows[i].resetArrow();
   }
 }
 
 boolean arrowLoosed() {
-  if (arrow.getYPos() < (bow.getYPos() - arrow.getArrowLength())) {
+  if (arrows[shotNum].getYPos() < (bow.getYPos() - arrows[shotNum].getArrowLength())) {
     return true;
   } else {
     return false;
@@ -294,7 +310,7 @@ boolean arrowLoosed() {
 }
 
 boolean arrowLanded() {
-  if (arrow.getYPos() > target.getYPos() + (target.getDiameter()/2) * power.adjust()) {    // add target.getDiameter()/2 * power.powerAdjust()
+  if (arrows[shotNum].getYPos() > target.getYPos() + (target.getDiameter()/2) * power.adjust()) {    // add target.getDiameter()/2 * power.powerAdjust()
     return false;
   } else {
     return true;
@@ -302,8 +318,8 @@ boolean arrowLanded() {
 }
 
 boolean targetHit() {
-  if (arrow.getYPos() == target.getYPos() + (target.getDiameter()/2) * power.adjust() &&
-    dist(arrow.getXPos(), arrow.getYPos(), target.getXPos(), target.getYPos()) < (target.getDiameter()/2)) { 
+  if (arrows[shotNum].getYPos() == target.getYPos() + (target.getDiameter()/2) * power.adjust() &&
+    dist(arrows[shotNum].getXPos(), arrows[shotNum].getYPos(), target.getXPos(), target.getYPos()) < (target.getDiameter()/2)) { 
     return true;
   } else {
     return false;   
