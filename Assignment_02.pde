@@ -33,9 +33,9 @@ void setup() {
                                   "How many rounds would you like to play?", "5")),
                                   Integer.parseInt(JOptionPane.showInputDialog(
                                   "And how many shots per round would you like to attempt?", "5")));
-  arrows = new Arrow[player.getShotScores().length];
+  arrows = new Arrow[player.getShotScores().length];    // set arrows array length to user input
   
-  for (int i = 0; i < player.getShotScores().length; i++) {
+  for (int i = 0; i < player.getShotScores().length; i++) {    // initialize array of Arrow objects
     arrows[i] = new Arrow();
   }
   
@@ -45,9 +45,6 @@ void setup() {
   wind = new Wind();
   savedX = new float[1];          // not sure this needs to be an array
   
-  for (int i = 0; i < player.getShotScores().length; i++) {
-    println(arrows[i]);
-  }
 }
 
 void draw() {
@@ -62,9 +59,12 @@ void draw() {
   bow = new Bow(mouseX);                      // I could only get the bow to track mouseX  
   bow.display();                              // by passing it in from the draw() method
   //arrow.display();
-  arrows[shotNum].display();    // XXX working on arrows array
   power.display();
   wind.display();
+  
+  for (int i = 0; i <= shotNum; i++) {
+    arrows[i].display();    // XXX working on arrows array
+  }
 
   if (shotCount == shotNum) {                 // controls game flow, shot iteration
   
@@ -255,7 +255,7 @@ void draw() {
       }  
       
       if (nextShot == JOptionPane.YES_OPTION) {
-        arrows[shotNum].resetArrow();
+        //arrows[shotNum].resetArrow();
         target.resetTarget();
         wind.setWindSpeed();
         power.resetPower();
@@ -266,7 +266,7 @@ void draw() {
           "Take a quick breather and get your head back in the game. \n\nHit OK when you're ready",
           "Don't get distracted",
           JOptionPane.PLAIN_MESSAGE);       
-        arrows[shotNum].resetArrow();
+        //arrows[shotNum].resetArrow();
         target.resetTarget();
         wind.setWindSpeed();
         power.resetPower();
