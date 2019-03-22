@@ -19,7 +19,9 @@ int roundScore = 0;
 int maxShots = 5;
 int maxRounds = 3;
 //int numberOfRoundsPlayed = 0;
-float[] savedX;
+float[] savedMouseX;
+float[] landedArrowXY;
+float[] hitTargetXY;
 float afterShotCounter = 0;
 
 void setup() {
@@ -43,7 +45,9 @@ void setup() {
   //arrow = new Arrow();
   power = new PowerMeter();
   wind = new Wind();
-  savedX = new float[1];          // not sure this needs to be an array
+  savedMouseX = new float[1];          // not sure this needs to be an array
+  landedArrowXY = new float[2];
+  hitTargetXY = new float [2];
   
 }
 
@@ -62,7 +66,7 @@ void draw() {
   power.display();
   wind.display();
   
-  for (int i = 0; i <= shotNum; i++) {
+  for (int i = 0; i <= shotNum; i++) {        // continue to display all arrows that have been shot during a round
     arrows[i].display();    // XXX working on arrows array
   }
 
@@ -288,9 +292,9 @@ void draw() {
 
 void mouseClicked() {
   if (arrows[shotNum].getYPos() > target.getYPos() + (target.getDiameter()/2) * power.adjust()) {         // arrow can't be moved after striking target
-    savedX[0] = mouseX;
+    savedMouseX[0] = mouseX;
     power.clickStop();
-    arrows[shotNum].setXPos(savedX[0]);
+    arrows[shotNum].setXPos(savedMouseX[0]);
     arrows[shotNum].looseArrow();
   }
 }
@@ -318,8 +322,27 @@ boolean arrowLanded() {
 }
 
 boolean targetHit() {
-  if (arrows[shotNum].getYPos() == target.getYPos() + (target.getDiameter()/2) * power.adjust() &&
-    dist(arrows[shotNum].getXPos(), arrows[shotNum].getYPos(), target.getXPos(), target.getYPos()) < (target.getDiameter()/2)) { 
+  if (arrows[shotNum].getYPos() == target.getYPos() + (target.getDiameter()/2) * power.adjust() &&    // if arrow reaches power-adjusted Y position
+    dist(arrows[shotNum].getXPos(), arrows[shotNum].getYPos(), target.getXPos(), target.getYPos()) < (target.getDiameter()/2)) {  // && is within the target radius
+    
+    arrows[shotNum].setTargetWasHit(true);
+    
+    if (arrows[shotNum].getXPos() < target.getXPos()) {
+      arrows[shotNum].setLeftOfTarget(true);
+    } 
+    
+    if (arrows[shotNum].getYPos() < target.getYPos()) {
+      arrows[shotNum].setAboveTarget(true);
+    }
+    
+    //arrows[shotNum].landedArrowXY[0] = arrows[shotNum].getXPos();    // store arrow's current x position
+    //arrows[shotNum].landedArrowXY[1] = arrows[shotNum].getYPos();    // store arrow'w current y position
+    //hitTargetXY[0] = target.getXPos();               // store target's current x position
+    //hitTargetXY[1] = target.getYPos();               // store target's current y position
+    
+    arrows[shotNum].hitXYDist[0] = (dist(arrows[shotNum].getXPos(), target.getYPos(), target.getXPos(), target.getYPos())) / (target.getDiameter()/2);
+    arrows[shotNum].hitXYDist[1] = (dist(target.getXPos(), arrows[shotNum].getYPos(), target.getXPos(), target.getYPos())) / (target.getDiameter()/2);
+    
     return true;
   } else {
     return false;   

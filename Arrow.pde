@@ -7,6 +7,11 @@ public class Arrow {
   private float xPos;    
   private float yPos = height-arrowLength;
   private float speed = 100;
+  private boolean targetWasHit = false;
+  private boolean leftOfTarget = false;
+  private boolean aboveTarget = false;
+  //private float[] landedArrowXY = new float[2];
+  private float[] hitXYDist = new float[2];
 
   //----------------------constructors------------------------//
 
@@ -17,8 +22,31 @@ public class Arrow {
   //-------------------------methods--------------------------//
   
   public void display() {
-    if (yPos == target.getYPos() + (target.getDiameter()/2) * power.adjust()) {
-      rect(xPos, yPos, arrowWidth, arrowLength);   // shaft
+    if (targetWasHit == true) {
+      //hitXYDist[0] = (dist(landedArrowXY[0], target.getYPos(), target.getXPos(), target.getYPos())) / (target.getDiameter()/2);
+      //hitXYDist[1] = (dist(target.getXPos(), landedArrowXY[1], target.getXPos(), target.getYPos())) / (target.getDiameter()/2);
+      
+      float relativeX;
+      float relativeY;
+      
+      if (leftOfTarget == false) {
+        relativeX = target.getXPos() + ((target.getDiameter()/2) * hitXYDist[0]);      
+      } else {
+        relativeX = target.getXPos() - ((target.getDiameter()/2) * hitXYDist[0]);
+      }
+      
+      if (aboveTarget == false) {
+        relativeY = target.getYPos() + ((target.getDiameter()/2) * hitXYDist[1]);
+      } else {
+        relativeY = target.getYPos() - ((target.getDiameter()/2) * hitXYDist[1]);
+      }
+        
+      rect(relativeX, relativeY, arrowWidth, arrowLength);                                    // shaft
+      line(relativeX - arrowWidth/2, relativeY, relativeX + arrowWidth + arrowWidth/2, relativeY);      // edge of arrowhead
+      
+    }
+    else if (yPos == target.getYPos() + (target.getDiameter()/2) * power.adjust()) {
+      rect(xPos, yPos, arrowWidth, arrowLength);                                    // shaft
       line(xPos - arrowWidth/2, yPos, xPos + arrowWidth + arrowWidth/2, yPos);      // edge of arrowhead
     } 
     else if (yPos < height-arrowLength) {                // arrow in flight
@@ -44,10 +72,21 @@ public class Arrow {
   
   public void resetArrow() {
     setYPos(height-arrowLength);
+    targetWasHit = false;
   }
   
-  /*public void resetArrows() {
-    // reset arrows array
+  /*public void pinToTarget(float xPos, float yPos) {
+    
+    if (targetHit() == true) {
+      landedArrowXY[0] = xPos; 
+      landedArrowXY[1] = yPos;
+    }
+    
+    target.getXPos();
+    target.getYPos();
+    target.getDiameter();
+    setXPos(xPos);
+    setYPos(yPos);
   }*/
 
   //-------------------------getters--------------------------//
@@ -80,5 +119,17 @@ public class Arrow {
   
   public void setYPos(float yPos) {
     this.yPos = yPos;  
+  }
+  
+  public void setTargetWasHit(boolean wasHit) {
+    this.targetWasHit = wasHit;
+  }
+  
+  public void setLeftOfTarget(boolean side) {
+    this.leftOfTarget = side;
+  }
+  
+  public void setAboveTarget(boolean topBot) {
+    this.aboveTarget = topBot;
   }
 }
