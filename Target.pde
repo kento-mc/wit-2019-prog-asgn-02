@@ -3,13 +3,18 @@ public class Target {
   //-------------------instance variables---------------------// 
 
   private float xPos = random((width * .3),(width * .7));
-  private float yPos = random((height * .2),(height * .5));
+  //private float yPos = random((height * .2),(height * .5));
+  private float yPos = height * .45;
   private float diameter = yPos/2;
 
   //----------------------constructors------------------------//
 
   public Target(){
 
+  }
+  
+  public Target(float yPos) {
+    this.yPos = yPos;
   }
 
   //-------------------------methods--------------------------//
@@ -35,8 +40,12 @@ public class Target {
   
   public void resetTarget() {
     xPos = random((width * .3),(width * .7));
-    yPos = random((height * .2),(height * .5));
     diameter = yPos/2;
+  }
+  
+  public void resetTargetRound() {
+    xPos = random((width * .3),(width * .7));
+    yPos -= (height * .45 - height * .1) / player.getRoundScores().length;  // fix
   }
   
   //-------------------------getters--------------------------//

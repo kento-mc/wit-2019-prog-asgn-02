@@ -41,7 +41,7 @@ void setup() {
     arrows[i] = new Arrow();
   }
   
-  target = new Target();
+  target = new Target(height * .45);       // initialize first round targets' y position to height/2
   //arrow = new Arrow();
   power = new PowerMeter();
   wind = new Wind();
@@ -197,6 +197,7 @@ void draw() {
             player.addRoundScore(roundTotal);
             //arrow.resetArrow();
             resetArrows();          // XXX working on arrows array
+            target.resetTargetRound();
             target.resetTarget();
             wind.setWindSpeed();
             power.resetPower();
