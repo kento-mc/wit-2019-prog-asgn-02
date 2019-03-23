@@ -12,9 +12,28 @@ public class Player {
   //----------------------constructors------------------------//
 
   public Player(String playerName, int numberOfRounds, int numberOfShots) {
-    this.playerName = playerName;
-    shotScores = new int[numberOfShots];
-    roundScores = new int[numberOfRounds];    
+    if (playerName.length() > 20) {
+      this.playerName = playerName.substring(0, 19);
+    } else { 
+      this.playerName = playerName;
+    }
+    
+    if (numberOfShots > 10) {
+      shotScores = new int[10];
+    } else if (numberOfShots < 1) {
+      shotScores = new int[2]; 
+    } else {
+      shotScores = new int[numberOfShots];
+    }
+    
+    if (numberOfRounds > 5) {
+      roundScores = new int[5];
+    } else if (numberOfRounds < 1) {
+      roundScores = new int[1];
+    } else {
+      roundScores = new int[numberOfRounds]; 
+    }
+    
     for (int i = 0; i < shotScores.length; i++) {  // initialize all array positions to -1
       shotScores[i] = -1;                          // to distinguish from scores of 0
     }

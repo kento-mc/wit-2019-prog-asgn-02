@@ -83,7 +83,7 @@ void draw() {
   
     boolean landed = arrowLanded();             
     if (landed == true) {
-      arrows[shotNum].setYPos(target.getYPos() + (target.getDiameter()/2) * power.adjust());    // XXX working on arrows array     
+      arrows[shotNum].setYPos(target.getYPos() + (target.getDiameter()/2) * power.adjust());    
     }
   
     boolean hit = targetHit();

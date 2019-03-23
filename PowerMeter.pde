@@ -20,10 +20,23 @@ public class PowerMeter {
   //-------------------------methods--------------------------//
 
   public void display() {
-    rect(boxXPos, boxYPos, boxWidth, boxHeight);            // outer box
-    fill(125, 250, 115);
+    noStroke();
+    fill(255,0,0);                                          
+    rect(boxXPos, boxYPos, boxWidth, boxHeight);            // red
+    fill(255,75,0);                                          
+    rect(boxXPos, boxYPos + boxHeight*.1, boxWidth, boxHeight * .8);
+    fill(255,150,0);                                          
+    rect(boxXPos, boxYPos + boxHeight*.2, boxWidth, boxHeight * .6);
+    fill(255,255,0);                                          
+    rect(boxXPos, boxYPos + boxHeight*.3, boxWidth, boxHeight * .4);
+    fill(100, 250, 100);
     rect(boxXPos, greenYPos, boxWidth, barHeight*2);        // green section
-    fill(200, 150);
+    stroke(0);
+    strokeWeight(2);
+    noFill();
+    rect(boxXPos, boxYPos, boxWidth, boxHeight);            // outer box
+    strokeWeight(1);
+    fill(200, 200);
     rect(boxXPos, barYPos, boxWidth, barHeight);            // moving bar
 
     barYPos -= speed;
