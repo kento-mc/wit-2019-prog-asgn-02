@@ -12,11 +12,7 @@ public class Player {
   //----------------------constructors------------------------//
 
   public Player(String playerName, int numberOfRounds, int numberOfShots) {
-    if (playerName.length() > 20) {
-      this.playerName = playerName.substring(0, 19);
-    } else { 
-      this.playerName = playerName;
-    }
+    this.playerName = playerName;
     
     if (numberOfShots > 10) {
       shotScores = new int[10];
@@ -83,11 +79,11 @@ public class Player {
     }
   }
 
-  public void addShot() {      // adds new score to next available gameShots[] index           
+  public void addShot() {      // adds new score to next available shotScores[] index           
       shotCount++;
   }  
 
-  public void addRoundScore(int roundScore) {     // adds new score to next available gameScores[] index
+  public void addRoundScore(int roundScore) {     // adds new score to next available roundScores[] index
     if (roundScore >= 0) {
       roundScores[roundCount] = roundScore;
       roundCount++;

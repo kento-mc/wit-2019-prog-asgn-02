@@ -21,7 +21,7 @@ public class Bow {
     if (arrowLoosed() == false) {
       fill(85,65,40);
       ellipse(xPos, yPos, bowWidth, bowHeight);
-      fill(0, 150, 0);
+      fill(0, 100, 0);
       ellipse(xPos, yPos, bowWidth, bowHeight/1.2);
       noStroke();
       rect(xPos - bowWidth * .6, height - height/40, bowWidth * 2, height/40);  // hides bottom of bow ellipse
@@ -31,7 +31,7 @@ public class Bow {
     } else {
       fill(85,65,40);
       ellipse(xPos, yPos - height/40, bowWidth*1.2, bowHeight/2);
-      fill(0, 150, 0);
+      fill(0, 100, 0);
       ellipse(xPos, (yPos - height/40) + 1, bowWidth*1.2, (bowHeight/2)/1.2);
       noStroke();
       rect(xPos - bowWidth * .6, yPos - height/40, bowWidth * 2, height/10);  // hides bottom of bow ellipse
