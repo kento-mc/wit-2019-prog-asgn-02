@@ -11,14 +11,13 @@ Wind wind;
 
 String playerName;
 Arrow[] arrows;
+Arrow[] arrowMisses;
 int shotNum = 0;
 int shotCount = 0;
 int shotScore = 0;
-//int roundCount = 0;
 int roundScore = 0;
-int maxShots = 5;
-int maxRounds = 3;
-//int numberOfRoundsPlayed = 0;
+//int maxShots = 5;
+//int maxRounds = 3;
 float[] savedMouseX;
 float[] landedArrowXY;
 float[] hitTargetXY;
@@ -36,13 +35,14 @@ void setup() {
                                   Integer.parseInt(JOptionPane.showInputDialog(
                                   "And how many shots per round would you like to attempt?", "5")));
   arrows = new Arrow[player.getShotScores().length];    // set arrows array length to user input
+  arrowMisses = new Arrow[player.getShotScores().length];
   
   for (int i = 0; i < player.getShotScores().length; i++) {    // initialize array of Arrow objects
     arrows[i] = new Arrow();
+    arrowMisses[i] = new Arrow();
   }
   
   target = new Target(height * .45);       // initialize first round targets' y position to height/2
-  //arrow = new Arrow();
   power = new PowerMeter();
   wind = new Wind();
   savedMouseX = new float[1];          // not sure this needs to be an array
@@ -59,17 +59,21 @@ void draw() {
   rect(0, height*.8, width, height*.2);
 
   player.display();
-  target.display();
   bow = new Bow(mouseX);                      // I could only get the bow to track mouseX  
   bow.display();                              // by passing it in from the draw() method
-  //arrow.display();
+    
+  for (int i = 0; i <= shotNum; i++) {        // display missed shots behind target
+    arrowMisses[i].display();        
+  }
+  
+  target.display();
   power.display();
   wind.display();
-  
+    
   for (int i = 0; i <= shotNum; i++) {        // continue to display all arrows that have been shot during a round
     arrows[i].display();    // XXX working on arrows array
   }
-
+ 
   if (shotCount == shotNum) {                 // controls game flow, shot iteration
   
     boolean loosed = arrowLoosed();
@@ -195,8 +199,7 @@ void draw() {
             player.resetPlayer();
             player.resetShotCount();
             player.addRoundScore(roundTotal);
-            //arrow.resetArrow();
-            resetArrows();          // XXX working on arrows array
+            resetArrows();  
             target.resetTargetRound();
             target.resetTarget();
             wind.setWindSpeed();
@@ -257,10 +260,12 @@ void draw() {
                      "Maybe you should stick to bowling. \n\nYou scored " + player.getShotScores()[shotCount - 1] + "!" + 
                      "\n\nReady for your next shot?", "Miss!",
                      JOptionPane.YES_NO_OPTION);
+        arrowMisses[shotNum] = arrows[shotNum];    // add missed shot arrow to arrowMisses array so it appears behind the next target
+        arrows[shotNum] = new Arrow(height *2 );   // replace landed arrow with one drawn off screen. use overloaded arrow constructor
+        
       }  
       
       if (nextShot == JOptionPane.YES_OPTION) {
-        //arrows[shotNum].resetArrow();
         target.resetTarget();
         wind.setWindSpeed();
         power.resetPower();
@@ -271,7 +276,6 @@ void draw() {
           "Take a quick breather and get your head back in the game. \n\nHit OK when you're ready",
           "Don't get distracted",
           JOptionPane.PLAIN_MESSAGE);       
-        //arrows[shotNum].resetArrow();
         target.resetTarget();
         wind.setWindSpeed();
         power.resetPower();
@@ -303,6 +307,7 @@ void mouseClicked() {
 void resetArrows() {
   for (int i = 0; i < arrows.length; i++) {
     arrows[i].resetArrow();
+    arrowMisses[i].resetArrow();
   }
 }
 
@@ -315,7 +320,7 @@ boolean arrowLoosed() {
 }
 
 boolean arrowLanded() {
-  if (arrows[shotNum].getYPos() > target.getYPos() + (target.getDiameter()/2) * power.adjust()) {    // add target.getDiameter()/2 * power.powerAdjust()
+  if (arrows[shotNum].getYPos() > target.getYPos() + (target.getDiameter()/2) * power.adjust()) {    
     return false;
   } else {
     return true;
@@ -336,16 +341,12 @@ boolean targetHit() {
       arrows[shotNum].setAboveTarget(true);
     }
     
-    //arrows[shotNum].landedArrowXY[0] = arrows[shotNum].getXPos();    // store arrow's current x position
-    //arrows[shotNum].landedArrowXY[1] = arrows[shotNum].getYPos();    // store arrow'w current y position
-    //hitTargetXY[0] = target.getXPos();               // store target's current x position
-    //hitTargetXY[1] = target.getYPos();               // store target's current y position
-    
     arrows[shotNum].hitXYDist[0] = (dist(arrows[shotNum].getXPos(), target.getYPos(), target.getXPos(), target.getYPos())) / (target.getDiameter()/2);
     arrows[shotNum].hitXYDist[1] = (dist(target.getXPos(), arrows[shotNum].getYPos(), target.getXPos(), target.getYPos())) / (target.getDiameter()/2);
     
     return true;
-  } else {
+  } else {   
+    arrows[shotNum].setNoHead(true);
     return false;   
   }
 }

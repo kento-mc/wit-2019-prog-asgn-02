@@ -2,30 +2,33 @@ public class Arrow {
  
   //-------------------instance variables---------------------// 
 
-  private int arrowWidth = 3;
-  private int arrowLength = 60;
+  private float arrowWidth = width/200;
+  private float arrowLength = height/13.333;
   private float xPos;    
   private float yPos = height-arrowLength;
   private float speed = 100;
   private boolean targetWasHit = false;
   private boolean leftOfTarget = false;
   private boolean aboveTarget = false;
+  private boolean noHead = false;
   //private float[] landedArrowXY = new float[2];
   private float[] hitXYDist = new float[2];
 
   //----------------------constructors------------------------//
 
-   public Arrow() {
+  public Arrow() {
      
+  }
+  
+  public Arrow(float yPos) {
+    this.yPos = yPos;
   }
 
   //-------------------------methods--------------------------//
   
   public void display() {
     if (targetWasHit == true) {
-      //hitXYDist[0] = (dist(landedArrowXY[0], target.getYPos(), target.getXPos(), target.getYPos())) / (target.getDiameter()/2);
-      //hitXYDist[1] = (dist(target.getXPos(), landedArrowXY[1], target.getXPos(), target.getYPos())) / (target.getDiameter()/2);
-      
+
       float relativeX;
       float relativeY;
       
@@ -40,26 +43,35 @@ public class Arrow {
       } else {
         relativeY = target.getYPos() - ((target.getDiameter()/2) * hitXYDist[1]);
       }
-        
-      rect(relativeX, relativeY, arrowWidth, arrowLength);                                    // shaft
+   
+      triangle(relativeX + arrowWidth/2, relativeY + arrowLength * .8, relativeX - arrowWidth, relativeY + arrowLength, relativeX + arrowWidth *2, relativeY +arrowLength);  // feathers              
+      rect(relativeX, relativeY, arrowWidth, arrowLength);                                              // shaft
       line(relativeX - arrowWidth/2, relativeY, relativeX + arrowWidth + arrowWidth/2, relativeY);      // edge of arrowhead
       
     }
+    else if (yPos < height - arrowLength && noHead == true) {
+      triangle(xPos + arrowWidth/2, yPos + arrowLength * .8, xPos - arrowWidth, yPos + arrowLength, xPos + arrowWidth *2, yPos +arrowLength);  // feathers      
+      rect(xPos, yPos, arrowWidth, arrowLength);                                    // shaft
+      line(xPos - arrowWidth/2, yPos, xPos + arrowWidth + arrowWidth/2, yPos);      // edge of arrowhead
+    }
     else if (yPos == target.getYPos() + (target.getDiameter()/2) * power.adjust()) {
+      triangle(xPos + arrowWidth/2, yPos + arrowLength * .8, xPos - arrowWidth, yPos + arrowLength, xPos + arrowWidth *2, yPos +arrowLength);  // feathers      
       rect(xPos, yPos, arrowWidth, arrowLength);                                    // shaft
       line(xPos - arrowWidth/2, yPos, xPos + arrowWidth + arrowWidth/2, yPos);      // edge of arrowhead
     } 
     else if (yPos < height-arrowLength) {                // arrow in flight
+      triangle(xPos + arrowWidth/2, yPos + arrowLength * .8, xPos - arrowWidth, yPos + arrowLength, xPos + arrowWidth *2, yPos +arrowLength);  // feathers
       rect(xPos, yPos, arrowWidth, arrowLength);         // shaft
-      triangle(xPos + arrowWidth/2, yPos - 10,           // top point
+      triangle(xPos + arrowWidth/2, yPos - 10,           // triangle top point
          xPos - arrowWidth/2, yPos,                      // bottom left point
          xPos + arrowWidth + arrowWidth/2, yPos);        // bottom right point
     }
     else {                                                                            // arrow nocked
-      rect(bow.getXPos() + (bow.getBowWidth()/2), yPos, arrowWidth, arrowLength);     // shaft
-      triangle(bow.getXPos() + (bow.getBowWidth()/2) + arrowWidth/2, yPos - 10,       // top point
-         bow.getXPos() + (bow.getBowWidth()/2) - arrowWidth/2, yPos,                  // bottom left point
-         bow.getXPos() + (bow.getBowWidth()/2) + arrowWidth + arrowWidth/2, yPos);    // bottom right point
+      triangle(bow.getXPos() + arrowWidth/2, yPos + arrowLength * .8, bow.getXPos() - arrowWidth, yPos + arrowLength, bow.getXPos() + arrowWidth *2, yPos +arrowLength);  // feathers
+      rect(bow.getXPos(), yPos, arrowWidth, arrowLength);     // shaft
+      triangle(bow.getXPos() + arrowWidth/2, yPos - 10,       // triangle top point
+         bow.getXPos() - arrowWidth/2, yPos,                  // bottom left point
+         bow.getXPos() + arrowWidth + arrowWidth/2, yPos);    // bottom right point
     }
   }
 
@@ -74,20 +86,7 @@ public class Arrow {
     setYPos(height-arrowLength);
     targetWasHit = false;
   }
-  
-  /*public void pinToTarget(float xPos, float yPos) {
-    
-    if (targetHit() == true) {
-      landedArrowXY[0] = xPos; 
-      landedArrowXY[1] = yPos;
-    }
-    
-    target.getXPos();
-    target.getYPos();
-    target.getDiameter();
-    setXPos(xPos);
-    setYPos(yPos);
-  }*/
+ 
 
   //-------------------------getters--------------------------//
   
@@ -103,11 +102,11 @@ public class Arrow {
     return speed;
   }
   
-  public int getArrowLength() {
+  public float getArrowLength() {
     return arrowLength; 
   }
   
-    public int getArrowWidth() {
+    public float getArrowWidth() {
     return arrowWidth; 
   }
  
@@ -131,5 +130,9 @@ public class Arrow {
   
   public void setAboveTarget(boolean topBot) {
     this.aboveTarget = topBot;
+  }
+  
+  public void setNoHead(boolean noHead) {
+    this.noHead = noHead;
   }
 }
