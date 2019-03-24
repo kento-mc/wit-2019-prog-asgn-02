@@ -2,15 +2,13 @@ public class Target {
  
   //-------------------instance variables---------------------// 
 
-  private float xPos = random((width * .3),(width * .7));
-  //private float yPos = random((height * .2),(height * .5));
-  private float yPos = height * .45;
-  private float diameter = yPos/2;
+  private float xPos = random((width * .3),(width * .7));  // Randomizes x position
+  private float yPos = height * .45;                       // Initializes y position
+  private float diameter = yPos/2;                         // Sets diameter
 
   //----------------------constructors------------------------//
 
   public Target(){
-
   }
   
   public Target(float yPos) {
@@ -19,7 +17,7 @@ public class Target {
 
   //-------------------------methods--------------------------//
   
-  public void display() {
+  public void display() {                        // Draw target
     stroke(0);
     fill(255);
     circle(xPos, yPos, diameter);
@@ -38,14 +36,14 @@ public class Target {
     circle(xPos, yPos, (diameter * .1));
   }
   
-  public void resetTarget() {
+  public void resetTarget() {                    // Randomize x position
     xPos = random((width * .3),(width * .7));
-    diameter = yPos/2;
+    diameter = yPos/2;                           // Sets y position
   }
   
-  public void resetTargetRound() {
+  public void resetTargetRound() {               // Randomize x position
     xPos = random((width * .3),(width * .7));
-    yPos -= (height * .45 - height * .1) / player.getRoundScores().length;  // fix
+    yPos -= (height * .45 - height * .1) / player.getRoundScores().length;  // Sets target further back with each round
   }
   
   //-------------------------getters--------------------------//

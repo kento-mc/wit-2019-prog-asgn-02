@@ -1,8 +1,8 @@
 /* Reflection
 
-Name : 
+Name: Kenneth Chadwick 
 
-Student Number:
+Student Number: 20086513
 
 Link to Video:                e.g. https://youtu.be/DvnEIN8FIgA
 

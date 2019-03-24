@@ -1,4 +1,4 @@
-// RobinHoodTrainer v0.8
+// RobinHoodTrainer v0.9
 
 import javax.swing.JOptionPane;
 
@@ -11,8 +11,7 @@ Arrow[] arrows;                     // Array of Arrow objects to store reference
 Arrow[] arrowMisses;                // Array of Arrow objects for arrow objects which have missed the target to be passed into (explained further below)
 
 String playerName;                  // Stores user inputed player name
-int shotCount = 0;                  // Interates count of shots taken per round
-int shotNum = 0;                    // Iterates at a different point in the game flow from shotCount. Comparing them contols certain functions
+int shotNum = 0;                    // Iterates at a different point in the game flow from shotCount in Player class. Comparing them controls certain functions
 float afterShotCounter = 0;         // Controls delay of dialog box display after an Arrow object lands
 float[] savedMouseX;                // Stores Arrow object x position when it is loosed from the bow object
 
@@ -51,7 +50,7 @@ void setup() {
 }  // close setup method
 
 void draw() {
-  background(80, 170, 240);                // sky
+  background(80, 170, 240);                // blue sky
   fill(0, 100, 0);
   rect(0, height*.1, width, height*.9);    // darker green
   fill(0, 175, 0);
@@ -75,20 +74,17 @@ void draw() {
     arrows[i].display();    
   }
  
-  if (shotCount == shotNum) {              // Controls game flow, shot iteration
+  if (player.getShotCount() == shotNum) {  // Controls game flow, shot iteration
   
-    //boolean loosed = arrowLoosed();
     if (arrowLoosed() == true) {           // Looses the arrow toward the target
       arrows[shotNum].looseArrow();    
     }
   
-    //boolean landed = arrowLanded();             
     if (arrowLanded() == true) {           // Sets arrow y position to where it has landed
       arrows[shotNum].setYPos(target.getYPos() +    // Arrow y position is set to target's y position
       (target.getDiameter()/2) * power.adjust());   // and adjusted by a method in the PowerMeter class
     }
   
-    //boolean hit = targetHit();
     float shotQuality = dist(arrows[shotNum].getXPos(), arrows[shotNum].getYPos(), target.getXPos(), target.getYPos());
       // measures the distance between the tip of the arrow and the center of the target
     
@@ -118,233 +114,225 @@ void draw() {
       player.setShotScores(0);                                    // Set score to 0
     }
     
-    //boolean shotTaken = shotTaken();
     if (shotTaken() == true) {                                    // Tests if shot has finished being taken
-      shotCount++;                                                // Increments shot count
-      player.setShotCount(shotCount);                             // Sets shot count for player object
-    }
-      
+      player.addShot();                                           // Increments shot count
+    }     
   }  // close control flow if 
 
-  //boolean landed = arrowLanded();
-  if (arrowLanded() == true) {
-    afterShotCounter += .2;      // control for delay before after-shot dialog box opens
-  }    
+  if (arrowLanded() == true) {                                    // If arrow has landed, whether hit or miss
+    afterShotCounter += .2;                                       // Counter begins to control for delay before 
+  }                                                               // after-shot dialog box opens
   
-  if (afterShotCounter > 5 && shotCount > shotNum) {
-    if (shotCount == player.getShotScores().length) {
-      if (player.getShotScores()[shotCount-1] == 100) {
+  if (afterShotCounter > 5 && player.getShotCount() > shotNum) {    // Delay until counter reaches 5 before opening dialog box
+    if (player.getShotCount() == player.getShotScores().length) {   // If this was the last shot of the round
+      if (player.getShotScores()[player.getShotCount()-1] == 100) { // Dialog box for a score of 100
         JOptionPane.showMessageDialog(null,
-          "Impressive... \n\nYou scored " + player.getShotScores()[shotCount - 1] + "!" +
+          "Impressive... \n\nYou scored " + player.getShotScores()[player.getShotCount() - 1] + "!" +
           "\n\nThat was your last shot for this round.",
           "Bullseye!",
           JOptionPane.PLAIN_MESSAGE);
-      } else if (player.getShotScores()[shotCount-1] >= 70) {
+      } else if (player.getShotScores()[player.getShotCount()-1] >= 70) {  // Dialog box for a score of 70-99
         JOptionPane.showMessageDialog(null,
-          "Keep it up! \n\nYou scored " + player.getShotScores()[shotCount - 1] + "!" +
+          "Keep it up! \n\nYou scored " + player.getShotScores()[player.getShotCount() - 1] + "!" +
           "\n\nThat was your last shot for this round.",
           "Nice!",
           JOptionPane.PLAIN_MESSAGE);
-      } else if (player.getShotScores()[shotCount-1] >= 40) {
+      } else if (player.getShotScores()[player.getShotCount()-1] >= 40) {  // Dialog box for a score of 40-69
          JOptionPane.showMessageDialog(null,
-          "You're still in the game! \n\nYou scored " + player.getShotScores()[shotCount - 1] + "!" +
+          "You're still in the game! \n\nYou scored " + player.getShotScores()[player.getShotCount() - 1] + "!" +
           "\n\nThat was your last shot for this round.",
           "Not bad!",
           JOptionPane.PLAIN_MESSAGE);
-      } else if (player.getShotScores()[shotCount-1] > 10) {
+      } else if (player.getShotScores()[player.getShotCount()-1] > 10) {  // Dialog box for a score of 11-39
          JOptionPane.showMessageDialog(null,
-          "Gonna have to focus... \n\nYou scored " + player.getShotScores()[shotCount - 1] + "!" +
+          "Gonna have to focus... \n\nYou scored " + player.getShotScores()[player.getShotCount() - 1] + "!" +
           "\n\nThat was your last shot for this round.",
           "Okay",
           JOptionPane.PLAIN_MESSAGE); 
-      } else if (player.getShotScores()[shotCount-1] > 0) {
+      } else if (player.getShotScores()[player.getShotCount()-1] > 0) { // Dialog box for a score of 10
          JOptionPane.showMessageDialog(null,
-          "Not exactly Robin Hood are ya? \n\nYou scored " + player.getShotScores()[shotCount - 1] + "!" +
+          "Not exactly Robin Hood are ya? \n\nYou scored " + player.getShotScores()[player.getShotCount() - 1] + "!" +
           "\n\nThat was your last shot for this round.",
           "Oof",
           JOptionPane.PLAIN_MESSAGE);
-      } else {
+      } else {                                                          // Dialog box for a score of 0
          JOptionPane.showMessageDialog(null,
-          "Maybe you should stick to bowling. \n\nYou scored " + player.getShotScores()[shotCount - 1] + "!" +
+          "Maybe you should stick to bowling. \n\nYou scored " + player.getShotScores()[player.getShotCount() - 1] + "!" +
           "\n\nThat was your last shot for this round.",
           "Miss!",
           JOptionPane.PLAIN_MESSAGE);
       }  
       
-      int roundTotal = 0;
+      int roundTotal = 0;                                               // Declare variable to total the scores for the round
       
-      for (int i = 0; i < player.getShotScores().length; i++) {
-        roundTotal += player.getShotScores()[i];   
+      for (int i = 0; i < player.getShotScores().length; i++) {         // Loop through the scores
+        roundTotal += player.getShotScores()[i];                        // add each score to find the total
       }
             
-      JOptionPane.showMessageDialog(null,
+      JOptionPane.showMessageDialog(null,                               // Dialog box to give total round score and average shot score
         "Your total score for round " + player.getRoundCount() + ": " + roundTotal + "\n\n" +
         "Your average shot score: " + roundTotal/player.getShotScores().length,
         "End of Round " + player.getRoundCount(),
         JOptionPane.PLAIN_MESSAGE); 
       
-      if (player.getRoundCount() < player.getRoundScores().length) {  
-        int nextRound = JOptionPane.showConfirmDialog(null,
+      if (player.getRoundCount() < player.getRoundScores().length) {  // If this was not the last round
+        int nextRound = JOptionPane.showConfirmDialog(null,           // Declare variable to represent user choice of whether to continue
                      "Would you like to continue to the next round?", "Ready for more?",
                      JOptionPane.YES_NO_OPTION);
                            
-        if (nextRound == JOptionPane.YES_OPTION) {      
-            player.resetPlayer();
-            player.resetShotCount();
-            player.addRoundScore(roundTotal);
-            resetArrows();  
-            target.resetTargetRound();
-            target.resetTarget();
-            wind.setWindSpeed();
-            power.resetPower();
-            afterShotCounter = 0;         
-            shotNum = 0;
-            shotCount = 0;
+        if (nextRound == JOptionPane.YES_OPTION) {                    // User chooses to start next round
+            player.resetPlayer();                                     // Resets player object, including setting shot count to 0
+            //player.resetShotCount();                                  
+            player.addRoundScore(roundTotal);                         // Adds round score to roundScores array in Player class
+            resetArrows();                                            // Resets arrow objects to initial positions
+            target.resetTargetRound();                                // Sets target y position to appear further from user
+            target.resetTarget();                                     // Randomizes target x position
+            wind.setWindSpeed();                                      // Randomizes wind speed and direction
+            power.resetPower();                                       // Resets power meter
+            afterShotCounter = 0;                                     // Resets after-shot counter
+            shotNum = 0;                                              // Resets shotNum to 0, making it equal to shotCount in the Player class
+            //shotCount = 0;                                          // allowing the main game loop to start again
   
           } else {
-            JOptionPane.showMessageDialog(null,
-              "End of game message, not finishing rounds",
+            JOptionPane.showMessageDialog(null,                       // If user declines to continue
+              "End of game message, not finishing rounds",            // Dislplay stats   
               "Game Over",
               JOptionPane.PLAIN_MESSAGE);
               
-            exit();
+            exit();                                                   // End the game
           }
       }
       else {
-        JOptionPane.showMessageDialog(null,
-          "Finished all rounds",
-          "Final Stats",
+        JOptionPane.showMessageDialog(null,                           // If the user has completed all rounds
+          "Finished all rounds",                                      // Display stats
+          "Final Stats",                                    
           JOptionPane.PLAIN_MESSAGE);
           
-        exit();
+        exit();                                                       // End the game
       }   
     }  // close if that tests if shot is last of the round
-    else {
+    else {                                                            // If there are more shots to take this round
       
-      int nextShot;
+      int nextShot;                                                   // Declare variable to store user choice for taking next shot
       
-      if (player.getShotScores()[shotCount-1] == 100) {
+      if (player.getShotScores()[player.getShotCount()-1] == 100) {   // Dialog box for a score of 100
         nextShot = JOptionPane.showConfirmDialog(null,
-                     "Impressive... \n\nYou scored " + player.getShotScores()[shotCount - 1] + "!" + 
+                     "Impressive... \n\nYou scored " + player.getShotScores()[player.getShotCount() - 1] + "!" + 
                      "\n\nReady for your next shot?", "Bullseye!",
                      JOptionPane.YES_NO_OPTION);                
-      } else if (player.getShotScores()[shotCount-1] >= 70) {
+      } else if (player.getShotScores()[player.getShotCount()-1] >= 70) {  // Dialog box for a score of 70-99
         nextShot = JOptionPane.showConfirmDialog(null,
-                     "Keep it up! \n\nYou scored " + player.getShotScores()[shotCount - 1] + "!" + 
+                     "Keep it up! \n\nYou scored " + player.getShotScores()[player.getShotCount() - 1] + "!" + 
                      "\n\nReady for your next shot?", "Nice!",
                      JOptionPane.YES_NO_OPTION);
-      } else if (player.getShotScores()[shotCount-1] >= 40) {
+      } else if (player.getShotScores()[player.getShotCount()-1] >= 40) {  // Dialog box for a score of 40-69
          nextShot = JOptionPane.showConfirmDialog(null,
-                     "You're still in the game. \n\nYou scored " + player.getShotScores()[shotCount - 1] + "!" + 
+                     "You're still in the game. \n\nYou scored " + player.getShotScores()[player.getShotCount() - 1] + "!" + 
                      "\n\nReady for your next shot?", "Not bad!",
                      JOptionPane.YES_NO_OPTION);
-      } else if (player.getShotScores()[shotCount-1] > 10) {
+      } else if (player.getShotScores()[player.getShotCount()-1] > 10) {  // Dialog box for a score of 11-39
          nextShot = JOptionPane.showConfirmDialog(null,
-                     "Gonna have to focus. \n\nYou scored " + player.getShotScores()[shotCount - 1] + "!" + 
+                     "Gonna have to focus. \n\nYou scored " + player.getShotScores()[player.getShotCount() - 1] + "!" + 
                      "\n\nReady for your next shot?", "Okay",
                      JOptionPane.YES_NO_OPTION); 
-      } else if (player.getShotScores()[shotCount-1] > 0) {
+      } else if (player.getShotScores()[player.getShotCount()-1] > 0) {  // Dialog box for a score of 10
          nextShot = JOptionPane.showConfirmDialog(null,
-                     "Not exactly Robin Hood are ya? \n\nYou scored " + player.getShotScores()[shotCount - 1] + "!" + 
+                     "Not exactly Robin Hood are ya? \n\nYou scored " + player.getShotScores()[player.getShotCount() - 1] + "!" + 
                      "\n\nReady for your next shot?", "Oof",
                      JOptionPane.YES_NO_OPTION);
       } else {
-         nextShot = JOptionPane.showConfirmDialog(null,
-                     "Maybe you should stick to bowling. \n\nYou scored " + player.getShotScores()[shotCount - 1] + "!" + 
+         nextShot = JOptionPane.showConfirmDialog(null,                  // Dialog box for a score of 0
+                     "Maybe you should stick to bowling. \n\nYou scored " + player.getShotScores()[player.getShotCount() - 1] + "!" + 
                      "\n\nReady for your next shot?", "Miss!",
                      JOptionPane.YES_NO_OPTION);
-        arrowMisses[shotNum] = arrows[shotNum];    // add missed shot arrow to arrowMisses array so it appears behind the next target
-        arrows[shotNum] = new Arrow(height *2 );   // replace landed arrow with one drawn off screen. use overloaded arrow constructor       
+        arrowMisses[shotNum] = arrows[shotNum];    // Add missed shot arrow to arrowMisses array so it appears behind the next target
+        arrows[shotNum] = new Arrow(height *2 );   // Replace arrow that missed target with one drawn off screen, using overloaded arrow constructor       
       }  
       
-      if (nextShot == JOptionPane.YES_OPTION) {
-        target.resetTarget();
-        wind.setWindSpeed();
-        power.resetPower();
-        shotNum++;
-        afterShotCounter = 0;
-      } else {
+      if (nextShot == JOptionPane.YES_OPTION) {    // If user choses to take the next shot
+        target.resetTarget();                      // Randomizes target x position
+        wind.setWindSpeed();                       // Randomizes wind speed and direction
+        power.resetPower();                        // Resets power meter
+        shotNum++;  // Increments shotNum, making it equal to shotCount in the Player class, allowing the main game loop to start again
+        afterShotCounter = 0;                      // Resets after-shot counter
+      } else {                                     // If user says no to taking next turn
         JOptionPane.showMessageDialog(null,
           "Take a quick breather and get your head back in the game. \n\nHit OK when you're ready",
           "Don't get distracted",
           JOptionPane.PLAIN_MESSAGE);       
-        target.resetTarget();
-        wind.setWindSpeed();
-        power.resetPower();
-        shotNum++;
-        afterShotCounter = 0;     
+        target.resetTarget();                      // Randomizes target x position
+        wind.setWindSpeed();                       // Randomizes wind speed and direction
+        power.resetPower();                        // Resets power meter
+        shotNum++;  // Increments shotNum, making it equal to shotCount in the Player class, allowing the main game loop to start again
+        afterShotCounter = 0;                      // Resets after-shot counter
       }      
     }  // close else
   }  // close outer if      
-  
-  //println("roundCount: " + roundCount);
-  println(shotCount);
-  println(shotNum);
-  println("player.getRoundCount(): " + player.getRoundCount());
-  
-    
 }  // close draw() method
 
 //-------------------------methods--------------------------//
 
-void mouseClicked() {
-  if (arrows[shotNum].getYPos() > target.getYPos() + (target.getDiameter()/2) * power.adjust()) {         // arrow can't be moved after striking target
-    savedMouseX[0] = mouseX;
-    power.clickStop();
-    arrows[shotNum].setXPos(savedMouseX[0]);
-    arrows[shotNum].looseArrow();
+void mouseClicked() {                             // If mouse is clicked
+  if (arrows[shotNum].getYPos() > target.getYPos() + (target.getDiameter()/2) * power.adjust()) {  // Only perform following functions if arrow hasn't landed
+                                                  // so arrow doesn't move after striking target
+    savedMouseX[0] = mouseX;                      // Store the x value from mouseX to fix the arrow x position before it is shot
+    power.clickStop();                            // Stop the moving bar on the power meter
+    arrows[shotNum].setXPos(savedMouseX[0]);      // Fix the x position of the arrow object being shot
+    arrows[shotNum].looseArrow();                 // Loose arrow from the bow
   }
 }
 
-void resetArrows() {
-  for (int i = 0; i < arrows.length; i++) {
-    arrows[i].resetArrow();
-    arrowMisses[i].resetArrow();
+void resetArrows() {                              // Resets all arrow objects for each round
+  for (int i = 0; i < arrows.length; i++) {       // Loop through arrow objects
+    arrows[i].resetArrow();                       // Reset arrows to initial position
+    arrowMisses[i].resetArrow();                  // Reset arrows to initial position
   }
 }
 
-boolean arrowLoosed() {
-  if (arrows[shotNum].getYPos() < (bow.getYPos() - arrows[shotNum].getArrowLength())) {
+boolean arrowLoosed() {                           // Has the arrow object been loosed?
+  if (arrows[shotNum].getYPos() < (bow.getYPos() - arrows[shotNum].getArrowLength())) {  // Arrow y position is less than initial position
     return true;
   } else {
     return false;
   }
 }
 
-boolean arrowLanded() {
-  if (arrows[shotNum].getYPos() > target.getYPos() + (target.getDiameter()/2) * power.adjust()) {    
+boolean arrowLanded() {                           // Has the arrow landed?
+  if (arrows[shotNum].getYPos() > target.getYPos() + (target.getDiameter()/2) * power.adjust()) {  // Arrow y position is greater than it's landing spot
     return false;
   } else {
     return true;
   }
 }
 
-boolean targetHit() {
-  if (arrows[shotNum].getYPos() == target.getYPos() + (target.getDiameter()/2) * power.adjust() &&    // if arrow reaches power-adjusted Y position
+boolean targetHit() {                                    // Has the arrow object hit the target?
+  if (arrows[shotNum].getYPos() == target.getYPos() + (target.getDiameter()/2) * power.adjust() &&    // If arrow reaches power-adjusted y position
     dist(arrows[shotNum].getXPos(), arrows[shotNum].getYPos(), target.getXPos(), target.getYPos()) < (target.getDiameter()/2)) {  // && is within the target radius
     
-    arrows[shotNum].setTargetWasHit(true);
+    arrows[shotNum].setTargetWasHit(true);               // Set boolean variable within Arrow class to match targetHit() value
     
-    if (arrows[shotNum].getXPos() < target.getXPos()) {
-      arrows[shotNum].setLeftOfTarget(true);
+    if (arrows[shotNum].getXPos() < target.getXPos()) {  // Did arrow object land to the left of the target center?
+      arrows[shotNum].setLeftOfTarget(true);             // Set boolean variable within Arrow class 
     } 
     
-    if (arrows[shotNum].getYPos() < target.getYPos()) {
-      arrows[shotNum].setAboveTarget(true);
+    if (arrows[shotNum].getYPos() < target.getYPos()) {  // Did arrow object land to the right of the target center?
+      arrows[shotNum].setAboveTarget(true);              // Set boolean variable within Arrow class
     }
     
     arrows[shotNum].hitXYDist[0] = (dist(arrows[shotNum].getXPos(), target.getYPos(), target.getXPos(), target.getYPos())) / (target.getDiameter()/2);
+      // Capture x-axis distance between landed arrow object and target center
     arrows[shotNum].hitXYDist[1] = (dist(target.getXPos(), arrows[shotNum].getYPos(), target.getXPos(), target.getYPos())) / (target.getDiameter()/2);
+      // Capture y-axis distance between landed arrow object and target center
     
     return true;
   } else {   
-    arrows[shotNum].setNoHead(true);
+    arrows[shotNum].setNoHead(true);                     // Set boolean variable within Arrow class
     return false;   
   }
 }
 
-boolean shotTaken() {                    
-  if (afterShotCounter > 0) {
+boolean shotTaken() {                                    // Has the shot been taken?
+  if (afterShotCounter > 0) {                            // After-shot counter has started
     return true;
   } else {
     return false;
