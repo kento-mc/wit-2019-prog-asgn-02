@@ -19,9 +19,16 @@ void setup() {
   size(600, 800);
   frameRate(48);
   noCursor();
-
+  
+  JOptionPane.showMessageDialog(null,"Archery isn't as hard as it looks. All you have to do is click the mouse! " +
+                                "\n\nNote the wind speed and direction and adjust the bow position accordingly. " + 
+                                "\nThen wait to click the mouse until the moving bar in the power meter is as close " + 
+                                "\nto the green section as you can manage." + 
+                                "\n\nStep up when you're ready to take your first shot!",
+                                "Welcome to RobinHoodTrainer v1.0", JOptionPane.PLAIN_MESSAGE);
+  
   playerName =(JOptionPane.showInputDialog("A challenger approaches. What is your name?", "Player 1"));  // get user input for player name
-    // doing this before calling the constructor so the name can be displayed in the dialog boxes that open within the constructor
+    // doing this before calling the Player constructor so the name can be displayed in the dialog boxes that open within the constructor
                                               
   if (playerName == null) {                   // If user input is null, set name to "Player 1"        
     playerName = "Player 1"; 
@@ -31,9 +38,9 @@ void setup() {
   
   player = new Player(playerName, Integer.parseInt(JOptionPane.showInputDialog(      // Player object constructor
                                   "Welcome " + playerName + "!\n" +
-                                  "How many rounds would you like to play?", "5")),  // User input initializes number of rounds
+                                  "How many rounds would you like to play?", "3")),  // User input initializes number of rounds
                                   Integer.parseInt(JOptionPane.showInputDialog(
-                                  "And how many shots per round would you like to attempt?", "5"))); // User input initializes number of shots
+                                  "And how many shots per round would you like to attempt?", "3"))); // User input initializes number of shots
   arrows = new Arrow[player.getShotScores().length];               // set arrows array length to user input for number of shots
   arrowMisses = new Arrow[arrows.length];          // set arrowMisses array length to match length of arrows array
   
@@ -80,7 +87,7 @@ void draw() {
       arrows[shotNum].looseArrow();    
     }
   
-    if (arrowLanded() == true) {           // Sets arrow y position to where it has landed
+    if (arrowLanded() == true) {                    // Sets arrow y position to where it has landed
       arrows[shotNum].setYPos(target.getYPos() +    // Arrow y position is set to target's y position
       (target.getDiameter()/2) * power.adjust());   // and adjusted by a method in the PowerMeter class
     }
@@ -163,17 +170,21 @@ void draw() {
           JOptionPane.PLAIN_MESSAGE);
       }  
       
-      int roundTotal = 0;                                               // Declare variable to total the scores for the round
+      int roundTotal = 0;                                               // Variable to total the scores for the round
+      String roundString = "";                                          // Variable to concatenate String of scores to display later
       
       for (int i = 0; i < player.getShotScores().length; i++) {         // Loop through the scores
-        roundTotal += player.getShotScores()[i];                        // add each score to find the total
+        roundTotal += player.getShotScores()[i];                        // Add each score to find the total
+        roundString += player.getShotScores()[i] + "\n     ";           // Add each score to String
       }
+      
+      player.setShotScoreStrings(roundString);                          // Store the concatenated score string in the shotScoreStrings array
             
       JOptionPane.showMessageDialog(null,                               // Dialog box to give total round score and average shot score
-        "Your total score for round " + player.getRoundCount() + ": " + roundTotal + "\n\n" +
-        "Your average shot score: " + roundTotal/player.getShotScores().length,
-        "End of Round " + player.getRoundCount(),
-        JOptionPane.PLAIN_MESSAGE); 
+      "Your total score for round " + player.getRoundCount() + ": " + roundTotal + "\n\n" +
+      "Your average shot score: " + roundTotal/player.getShotScores().length,
+      "End of Round " + player.getRoundCount(),
+      JOptionPane.PLAIN_MESSAGE);    
       
       if (player.getRoundCount() < player.getRoundScores().length) {  // If this was not the last round
         int nextRound = JOptionPane.showConfirmDialog(null,           // Declare variable to represent user choice of whether to continue
@@ -182,7 +193,6 @@ void draw() {
                            
         if (nextRound == JOptionPane.YES_OPTION) {                    // User chooses to start next round
             player.resetPlayer();                                     // Resets player object, including setting shot count to 0
-            //player.resetShotCount();                                  
             player.addRoundScore(roundTotal);                         // Adds round score to roundScores array in Player class
             resetArrows();                                            // Resets arrow objects to initial positions
             target.resetTargetRound();                                // Sets target y position to appear further from user
@@ -191,25 +201,36 @@ void draw() {
             power.resetPower();                                       // Resets power meter
             afterShotCounter = 0;                                     // Resets after-shot counter
             shotNum = 0;                                              // Resets shotNum to 0, making it equal to shotCount in the Player class
-            //shotCount = 0;                                          // allowing the main game loop to start again
   
           } else {
-            JOptionPane.showMessageDialog(null,                       // If user declines to continue
-              "End of game message, not finishing rounds",            // Dislplay stats   
+            player.addRoundScore(roundTotal);                         // Adds round score to roundScores array in Player class
+            player.display();            
+            if ((player.getRoundCount() - 1) > 1) {
+              JOptionPane.showMessageDialog(null,                       // If user declines to continue
+              "You completed " + (player.getRoundCount() - 1) + " rounds." + "\n\n" +  // Dislplay stats
+              player.toString(),
               "Game Over",
               JOptionPane.PLAIN_MESSAGE);
-              
+            } else {
+              JOptionPane.showMessageDialog(null,                       // If user declines to continue
+              "You completed " + (player.getRoundCount() - 1) + " round." + "\n\n" +  // Dislplay stats
+              player.toString(),
+              "Game Over",
+              JOptionPane.PLAIN_MESSAGE);
+            }
             exit();                                                   // End the game
           }
       }
-      else {
-        JOptionPane.showMessageDialog(null,                           // If the user has completed all rounds
-          "Finished all rounds",                                      // Display stats
-          "Final Stats",                                    
+      else {                                                          // This was the last round
+        player.addRoundScore(roundTotal);                             // Adds round score to roundScores array in Player class
+        player.display();                   
+        JOptionPane.showMessageDialog(null,                           // If the user has completed all rounds                                      
+          player.toString(),                                          // Display stats
+          "Game Over",                                    
           JOptionPane.PLAIN_MESSAGE);
           
         exit();                                                       // End the game
-      }   
+      } 
     }  // close if that tests if shot is last of the round
     else {                                                            // If there are more shots to take this round
       
@@ -267,7 +288,10 @@ void draw() {
         afterShotCounter = 0;                      // Resets after-shot counter
       }      
     }  // close else
-  }  // close outer if      
+  }  // close outer if   
+  
+  println(player.getRoundScores());
+  
 }  // close draw() method
 
 //-------------------------methods--------------------------//

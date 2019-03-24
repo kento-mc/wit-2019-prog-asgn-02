@@ -3,31 +3,35 @@ public class Player {
   //-------------------instance variables---------------------// 
 
   private String playerName;                         // Stores user input for player name
-  private int[] shotScores;                          // Array of individual shot scores for each round
-  private int[] roundScores;                         // Array of total round scores for 
+  private int[] shotScores;                          // Array of individual shot scores for each round. Resets each round.
+  private int[] roundScores;                         // Array of total round scores for each round
+  private String[] shotScoreStrings;                 // Stores individual shot Scores from each round  
   private int shotCount;                             // Variable for current number of shots taken within a round
   private int roundCount;                            // Variable for current round
-  //boolean shotTaken;                                 // Has a shot been taken?
 
   //----------------------constructors------------------------//
 
   public Player(String playerName, int numberOfRounds, int numberOfShots) {
     this.playerName = playerName;
     
-    if (numberOfShots > 10) {                        // Limit number of shots per round to 10
-      shotScores = new int[10];
-    } else if (numberOfShots < 1) {                  // Set mimimum allowable shots per round to 2
-      shotScores = new int[2]; 
+    if (numberOfShots > 10) {                        // If user input is greater than 10
+      shotScores = new int[10];                      // Limit number of shots per round to 10
+    } else if (numberOfShots < 2) {                  // If user input is less than 2
+      shotScores = new int[2];                       // Set mimimum allowable shots per round to 2
     } else {
       shotScores = new int[numberOfShots];           // User-chosen number of shots
     }
     
-    if (numberOfRounds > 5) {                        // Limit number of rounds to 5
-      roundScores = new int[5];
-    } else if (numberOfRounds < 1) {                 // Set minimum allowable rounds  to 1
-      roundScores = new int[1];
+    if (numberOfRounds > 5) {                        // If user input is greater than 5
+      roundScores = new int[5];                      // Limit number of rounds to 5
+      shotScoreStrings = new String[5];              // Set to match number of rounds
+    } else if (numberOfRounds < 1) {                 // If user input is less than 1
+      roundScores = new int[1];                      // Set minimum allowable rounds  to 1
+      shotScoreStrings = new String[1];              // Set to match number of rounds
     } else {
       roundScores = new int[numberOfRounds];         // User-chosen number of rounds
+      shotScoreStrings = new String[numberOfRounds]; // Set to match number of rounds
+      
     }
     
     for (int i = 0; i < shotScores.length; i++) {    // Initialize all array positions to -1
@@ -37,7 +41,7 @@ public class Player {
       roundScores[i] = -1;                           // to distinguish from scores of 0
     }
     shotCount = 0;                                   // Initialize shot count to 0
-    roundCount = 1;                                  // Initialize round bount to 1
+    roundCount = 1;                                  // Initialize round count to 1
   }
 
   //-------------------------methods--------------------------//
@@ -67,7 +71,7 @@ public class Player {
     float roundsY = height/4.3;
     for (int i = 0; i < roundScores.length; i++) {         // Draw each individual round score
       if (roundScores[i] >= 0) {
-        text((i) + " : " + roundScores[i], width * .85, roundsY);
+        text((i+1) + " : " + roundScores[i], width * .85, roundsY);
         roundsY += height/32;
       }
     }
@@ -86,22 +90,44 @@ public class Player {
 
   public void addRoundScore(int roundScore) {      // Adds new score to next available roundScores[] index
     if (roundScore >= 0) {
-      roundScores[roundCount] = roundScore;
+      roundScores[roundCount-1] = roundScore;
       roundCount++;                                // Increment round count
     }
   } 
-
-/*
+  
   public String toString() {
-    String str = "Scores for " + playerName +"\n";
-
-    for (int i = 0; i < gameCount; i++) {
-      str = str + "     Score " + (i+1) + ": " + gameScores[i] + "\n";
-    } 
-
-    return str;
-  } 
-*/
+    String nameScores = "Scores for " + playerName + "\n\n";       // Display the player's name  
+    String roundStr = "";                                          // Variable for player stat String
+    int grandTotal = 0;                                            // Variable for total score
+    float bestRound = roundScores[0];                              // Variable for best round score
+    float roundAvg = 0;                                            // Variable for average round score
+    float shotAvg = 0;                                             // Variable for average shot score
+    
+    
+    for (int i = 0; i < roundCount - 1; i++) {                     // Loop to build main stat section 
+      roundStr = roundStr + "Round " + (i+1) + 
+                 "          Total: " + roundScores[i] + "\n" +
+                 "     " + shotScoreStrings[i] + "\n";
+    }
+    
+    for (int i = 0; i < roundScores.length; i++) {                 // Loop to build grand total score
+      grandTotal = (grandTotal + roundScores[i]);
+    }
+    
+    for (int i = 0; i < roundScores.length; i++) {                 // Loop to determine best score
+      if (roundScores[i] > bestRound) {
+        bestRound = roundScores[i];
+      }
+    }
+    
+    roundAvg = grandTotal / roundScores.length;                    // Calculates round average
+    
+    shotAvg = roundAvg / shotScores.length;                        // Calculates shot average
+    
+    return nameScores + roundStr + "GRAND TOTAL:         " + grandTotal + "\n\n" + 
+           "Best Round:              " + round(bestRound) + "\n" + "Round Average:        " + 
+           round(roundAvg) + "\n" + "Shot Average:           " + round(shotAvg);
+  }
 
   //-------------------------getters--------------------------//
 
@@ -125,6 +151,10 @@ public class Player {
     return roundScores; 
   }
   
+  public String[] getShotScoreStrings() {
+    return shotScoreStrings;
+  }
+  
   //-------------------------setters--------------------------//
 
   public void setShotCount(int shotCount) {
@@ -140,7 +170,10 @@ public class Player {
   }
   
   public void setRoundScores(int roundScore) {
-    this.roundScores[roundCount] = roundScore;
+    this.roundScores[roundCount -1] = roundScore;
   }
-
+    
+  public void setShotScoreStrings(String roundString) {
+    this.shotScoreStrings[roundCount-1] = roundString;
+  }
 }
