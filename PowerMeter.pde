@@ -19,7 +19,7 @@ public class PowerMeter {
 
   //-------------------------methods--------------------------//
 
-  public void display() {                            // Draw the power meter
+  public void display() {                                   // Draw the power meter
     noStroke();
     fill(255,0,0);                                          
     rect(boxXPos, boxYPos, boxWidth, boxHeight);            // red limits

@@ -41,7 +41,7 @@ public class Target {
     diameter = yPos/2;                           // Sets y position
   }
   
-  public void resetTargetRound() {               // Randomize x position
+  public void resetTargetRound() {               // Randomize x position and sey y position lower
     xPos = random((width * .3),(width * .7));
     yPos -= (height * .45 - height * .1) / player.getRoundScores().length;  // Sets target further back with each round
   }

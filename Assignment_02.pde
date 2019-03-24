@@ -1,4 +1,4 @@
-// RobinHoodTrainer v0.9
+// RobinHoodTrainer v1.0
 
 import javax.swing.JOptionPane;
 
@@ -37,14 +37,14 @@ void setup() {
   }
   
   player = new Player(playerName, Integer.parseInt(JOptionPane.showInputDialog(      // Player object constructor
-                                  "Welcome " + playerName + "!\n" +
-                                  "How many rounds would you like to play?", "3")),  // User input initializes number of rounds
+                                  "Welcome " + playerName + "!\n\n" +
+                                  "How many rounds would you like to play? (1-5)", "3")),  // User input initializes number of rounds
                                   Integer.parseInt(JOptionPane.showInputDialog(
-                                  "And how many shots per round would you like to attempt?", "3"))); // User input initializes number of shots
+                                  "And how many shots per round would you like to attempt? (2-10)", "3"))); // User input initializes number of shots
   arrows = new Arrow[player.getShotScores().length];               // set arrows array length to user input for number of shots
   arrowMisses = new Arrow[arrows.length];          // set arrowMisses array length to match length of arrows array
   
-  for (int i = 0; i < player.getShotScores().length; i++) {        // initialize array of Arrow objects
+  for (int i = 0; i < player.getShotScores().length; i++) {        // initialize arrays of Arrow objects
     arrows[i] = new Arrow();
     arrowMisses[i] = new Arrow();
   }
@@ -220,8 +220,7 @@ void draw() {
             }
             exit();                                                   // End the game
           }
-      }
-      else {                                                          // This was the last round
+      } else {                                                        // This was the last round
         player.addRoundScore(roundTotal);                             // Adds round score to roundScores array in Player class
         player.display();                   
         JOptionPane.showMessageDialog(null,                           // If the user has completed all rounds                                      
@@ -290,8 +289,8 @@ void draw() {
     }  // close else
   }  // close outer if   
   
-  println(player.getRoundScores());
-  
+  // println(player.getRoundScores());             // Mean to remove this, but left if until after I'd listed all my line numbers in the 
+                                                   // reflection tab, so I'm leaving it in and commenting it out
 }  // close draw() method
 
 //-------------------------methods--------------------------//

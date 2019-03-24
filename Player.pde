@@ -77,7 +77,7 @@ public class Player {
     }
   }
   
-  public void resetPlayer() {
+  public void resetPlayer() {                      // Resets player info for next round
     for (int i = 0; i < shotScores.length; i++) {  // Initialize all array positions to -1
       shotScores[i] = -1;                          // to distinguish from scores of 0
     }  
@@ -95,7 +95,7 @@ public class Player {
     }
   } 
   
-  public String toString() {
+  public String toString() {                                       // Builds string to give information on player objects
     String nameScores = "Scores for " + playerName + "\n\n";       // Display the player's name  
     String roundStr = "";                                          // Variable for player stat String
     int grandTotal = 0;                                            // Variable for total score
